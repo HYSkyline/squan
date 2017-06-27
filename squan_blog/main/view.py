@@ -1,3 +1,5 @@
+# -*- coding:utf-8 -*-
+
 from flask import render_template, session, redirect, url_for, current_app
 from .. import db
 from ..models import User
@@ -13,15 +15,18 @@ def index():
         user = User.query.filter_by(username=form.name.data).first()
         if user is None:
             user = User(username=form.name.data)
-            db.session.add(user)
+            # 名称写入数据库
+            # db.session.add(user)
             session['known'] = False
-            if current_app.config['FLASK_ADMIN_EMAIL']:
-                send_mail(
-                    current_app.config['FLASK_ADMIN_EMAIL'],
-                    'New User',
-                    'mail/new_user',
-                    user=user
-                )
+            # 准备发送邮件(当前存在ERRNO:10061错误)
+            # if current_app.config['FLASK_ADMIN_EMAIL']:
+                # print 'prepare to send email now.'
+                # send_mail(
+                #     current_app.config['FLASK_ADMIN_EMAIL'],
+                #     'New User',
+                #     'mail/new_user',
+                #     user=user
+                # )
         else:
             session['known'] = True
         session['name'] = form.name.data
