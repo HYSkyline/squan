@@ -14,7 +14,7 @@
     <div class="row clearfix">
         <div class="col-md-12 column">
             {% block navbar %}        
-            <div class="navbar navbar-inverse" role="navigation">
+            <div class="navbar navbar" role="navigation">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="sr-only">Toggle navigation</span>
@@ -33,6 +33,7 @@
                         <li><a href="{{ url_for('auth.logout') }}">登出</a></li>
                         {% else %}
                         <li><a href="{{ url_for('auth.login') }}">登录</a></li>
+                        <li><a href="{{ url_for('auth.register') }}">注册</a></li>
                         {% endif %}
                     </ul>
                 </div>
