@@ -1,0 +1,1 @@
+数据库中userlist列表需要username、password_hash、role_id共3个字段，不需要password字段。
