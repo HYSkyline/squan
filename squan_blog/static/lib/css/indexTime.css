@@ -1,0 +1,17 @@
+.container{
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap/wrap-reverse;
+	align-content: center;
+}
+.timeArea{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.timeZone{
+	text-align: center;
+	font-family: 'Microsoft JhengHei';
+	font-size: 40px;
+}
