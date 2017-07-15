@@ -1,3 +1,13 @@
+html {
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+body {
+	background: url('https://media.giphy.com/media/xUqUHuwBq3dZu/giphy.gif');
+	background-size: 100%;
+	background-attachment: fixed top;
+	background-repeat: no-repeat;
+}
 .container{
 	display: flex;
 	justify-content: center;
@@ -9,6 +19,7 @@
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+	color: white;
 }
 .timeZone{
 	text-align: center;
