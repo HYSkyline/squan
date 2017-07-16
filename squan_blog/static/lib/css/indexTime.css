@@ -1,3 +1,14 @@
+html {
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+body {
+	background: url('https://media.giphy.com/media/xUqUHuwBq3dZu/giphy.gif') center;
+	background-size:cover;
+	background-attachment: fixed top;
+	background-repeat: no-repeat;
+	cursor: url('../../img/mouse/Normal.cur'), crosshair;
+}
 .container{
 	display: flex;
 	justify-content: center;
@@ -9,6 +20,8 @@
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+	color: white;
+	cursor: url('../../img/mouse/Link.cur'), pointer;
 }
 .timeZone{
 	text-align: center;
