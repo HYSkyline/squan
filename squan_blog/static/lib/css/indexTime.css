@@ -4,7 +4,17 @@
 	font-weight: normal;
 	font-style: normal;
 }
+
+@keyframes pageDisappear {
+	from {opacity: 100%;}
+	to {
+		opacity: 0;
+		visibility: hidden;
+	}
+}
+
 html {
+	cursor: url('../../img/mouse/Normal.cur'), crosshair;
 	overflow-x: hidden;
 	overflow-y: hidden;
 }
@@ -16,7 +26,6 @@ body {
 	margin-right: 0
 }
 .container{
-	cursor: url('../../img/mouse/Normal.cur'), crosshair;
 	background-image: url('https://media.giphy.com/media/xUqUHuwBq3dZu/giphy.gif');
 	background-position: center;
 	background-size:cover;

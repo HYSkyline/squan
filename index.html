@@ -19,12 +19,26 @@
 </head>
 
 <body onload="showTime()">
-<div class="container">
+<div class="container" id="container" onclick="page_exit()">
 	<div class="timeArea">
 	    <div id="Current_Time_Area" class="timeZone"></div>
 	    <div id="Left_Time_Area" class="timeZone"></div>
 	</div>
 </div>
 </body>
+
+<script type="text/javascript">
+	function page_exit() {
+		var containerDiv = document.getElementById('container');
+		containerDiv.style.animation = "pageDisappear 2s";
+		containerDiv.style.webkitanimation = "pageDisappear 1.5s";
+		containerDiv.style.mozanimation = "pageDisappear 1.5s";
+		containerDiv.style.oanimation = "pageDisappear 1.5s";
+		setTimeout('redirectHome()', 1500);
+	}
+	function redirectHome() {
+		window.location.href='https://github.com/HYSkyline';
+	}
+</script>
 
 </html>
