@@ -1,19 +1,33 @@
+@font-face {
+	font-family: 'FOT';
+	src: url('../../font/FOT-MatissePro-EB.otf') format('OpenType');
+	font-weight: normal;
+	font-style: normal;
+}
 html {
 	overflow-x: hidden;
 	overflow-y: hidden;
 }
 body {
-	background: url('https://media.giphy.com/media/xUqUHuwBq3dZu/giphy.gif') center;
-	background-size:cover;
-	background-attachment: fixed top;
-	background-repeat: no-repeat;
-	cursor: url('../../img/mouse/Normal.cur'), crosshair;
+	background: black;
+	margin-top: 0;
+	margin-bottom: 0;
+	margin-left: 0;
+	margin-right: 0
 }
 .container{
+	cursor: url('../../img/mouse/Normal.cur'), crosshair;
+	background-image: url('https://media.giphy.com/media/xUqUHuwBq3dZu/giphy.gif');
+	background-position: center;
+	background-size:cover;
+	background-repeat: no-repeat;
 	display: flex;
 	justify-content: center;
 	flex-wrap: wrap/wrap-reverse;
 	align-content: center;
+	position: absolute;
+	width: 100%;
+	height: 100%;
 }
 .timeArea{
 	position: absolute;
@@ -22,9 +36,10 @@ body {
 	transform: translate(-50%, -50%);
 	color: white;
 	cursor: url('../../img/mouse/Link.cur'), pointer;
+	user-select: none;
+	font-family: 'FOT';
 }
 .timeZone{
 	text-align: center;
-	font-family: 'Microsoft JhengHei';
 	font-size: 40px;
 }
