@@ -9,13 +9,12 @@
 <meta name="robots" content="nofollow">
 <meta name="author" content="傲雪双犬,HYSkyline@163.com">
 <meta name="revisit-after" content="7days">
-<meta http-equiv="Page-Enter" content="revealTrans(Duration=3,Transition=5)">
-<meta http-equiv="Page-Exit" content="revealTrans(Duration=3,Transition=5)">
 <meta http-equiv="Cache-Control" content="no-siteapp" />
 
 <link rel="icon" type="image/x-icon" href="squan_blog/static/img/icon/sq.png">
-<script type="text/javascript" src="squan_blog/static/lib/js/indexTime.js"></script>
 <link rel="stylesheet" type="text/css" href="squan_blog/static/lib/css/indexTime.css">
+<script type="text/javascript" src="squan_blog/static/lib/js/indexTime.js"></script>
+<script type="text/javascript" src="squan_blog/static/lib/js/pageExit.js"></script>
 </head>
 
 <body onload="showTime()">
@@ -26,19 +25,5 @@
 	</div>
 </div>
 </body>
-
-<script type="text/javascript">
-	function page_exit() {
-		var containerDiv = document.getElementById('container');
-		containerDiv.style.animation = "pageDisappear 2s";
-		containerDiv.style.webkitanimation = "pageDisappear 1.5s";
-		containerDiv.style.mozanimation = "pageDisappear 1.5s";
-		containerDiv.style.oanimation = "pageDisappear 1.5s";
-		setTimeout('redirectHome()', 1500);
-	}
-	function redirectHome() {
-		window.location.href='https://github.com/HYSkyline';
-	}
-</script>
 
 </html>
