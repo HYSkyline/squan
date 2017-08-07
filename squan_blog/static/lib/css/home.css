@@ -1,0 +1,12 @@
+html {
+	cursor: url('../../img/mouse/Normal.cur'), crosshair;
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+body {
+	background: black;
+	margin-top: 0;
+	margin-bottom: 0;
+	margin-left: 0;
+	margin-right: 0;
+}

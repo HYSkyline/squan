@@ -14,6 +14,7 @@
     <meta name="revisit-after" content="7days">
     <meta http-equiv="Cache-Control" content="no-siteapp" />
     <link rel="icon" href="{{ url_for('static', filename='img/icon/sq.png') }}" type="image/x-icon">
+    <!-- <script type="text/javascript" src="../static/lib/js/jquery-3.2.1.js"></script> -->
 {% endblock %}
 {% block body %}
 <div class="container">
@@ -28,11 +29,11 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{{ url_for('main.index') }}" style="font-family: 'Microsoft YaHei UI Light'">双犬的窝</a>
+                    <a class="navbar-brand" href="{{ url_for('main.home') }}" style="font-family: 'Microsoft YaHei UI Light'">双犬的窝</a>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="{{ url_for('main.index') }}" style="font-family: 'Microsoft YaHei UI Light'">主页</a></li>
+                        <li><a href="{{ url_for('main.home') }}" style="font-family: 'Microsoft YaHei UI Light'">主页</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         {% if current_user.is_authenticated %}
