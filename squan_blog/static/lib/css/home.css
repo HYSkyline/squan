@@ -1,3 +1,8 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
 html {
 	cursor: url('../../img/mouse/Normal.cur'), crosshair;
 	overflow-x: hidden;
@@ -5,8 +10,33 @@ html {
 }
 body {
 	background: black;
-	margin-top: 0;
-	margin-bottom: 0;
-	margin-left: 0;
-	margin-right: 0;
+}
+
+#map {
+    height: 100%;
+    width: 75%;
+    cursor: url('../../img/mouse/Link.cur'), crosshair;
+    float: left;
+}
+#catalog {
+	height: 100%;
+	width: 25%;
+	cursor: url('../../img/mouse/Normal.cur'), crosshair;
+	float: right;	
+}
+.catalogContent {
+	color: white;
+	font-family: 'STXiHei';
+}
+.listPrefix10 {
+	height: 15px;
+	width: 15px;
+	padding-left: 10px;
+	padding-right: 5px;
+}
+.listPrefix01 {
+	height: 12px;
+	width: 7px;
+	padding-left: 16px;
+	padding-right: 8px;
 }

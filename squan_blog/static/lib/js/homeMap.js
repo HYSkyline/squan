@@ -1,10 +1,10 @@
 function initMap() {
   var map= new google.maps.Map(document.getElementById('map'), {
     center:{
-      lat: 30.8738174820,
-      lng: 120.7395376068
+      lat: 30.8438174820,
+      lng: 120.9395376068
     },
-    zoom: 8,
+    zoom: 9,
     disableDefaultUI: true,
     styles:[
       {
@@ -194,6 +194,15 @@ function initMap() {
         ]
       },
       {
+        "featureType": "transit.line",
+        elementType: "geometry",
+        stylers: [
+          {
+            color: "#505050"
+          }
+        ]
+      },
+      {
         "featureType": "water",
         elementType: "labels.text.fill",
         stylers: [
@@ -204,4 +213,7 @@ function initMap() {
       }
     ]
   });
+  map.setOptions({
+    draggableCursor: 'url(../static/img/mouse/Normal.cur), crosshair'
+  })
 }
