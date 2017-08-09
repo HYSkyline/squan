@@ -8,17 +8,59 @@ from ..models import User
 
 
 class LoginForm(FlaskForm):
-	username = StringField(u'用户名', validators=[Required()])
-	password = PasswordField(u'密码', validators=[Required()])
+	username = StringField(
+		u'',
+		validators=[Required(), Length(1,16)],
+		render_kw={
+			"placeholder": u"用户名",
+			"class": "valueInput"
+		}
+	)
+	password = PasswordField(
+		u'',
+		validators=[Required()],
+		render_kw={
+			"placeholder": u"密码",
+			"class": "valueInput"
+		}
+	)
 	remember_me = BooleanField(u'保持登录状态')
-	submit = SubmitField(u'登录')
+	submit = SubmitField(
+		u'登录',
+	)
 
 
 class RegistrationForm(FlaskForm):
-	username = StringField(u'用户名', validators=[Required(), Length(1, 32)])
-	password = PasswordField(u'密码', validators=[Required(), EqualTo('password2', message=u'两次密码需要相同')])
-	password2 = PasswordField(u'确认密码', validators=[Required()])
-	submit = SubmitField(u'注册')
+	username = StringField(
+		u'',
+		validators=[Required(), Length(1, 16)],
+		render_kw={
+			"placeholder": u"用户名",
+			"style": "background-color: transparent;"
+		}
+	)
+	password = PasswordField(
+		u'',
+		validators=[Required(), EqualTo('password2', message=u'两次密码需要相同')],
+		render_kw={
+			"placeholder": u"密码",
+			"style": "background-color: transparent;"
+		}
+	)
+	password2 = PasswordField(
+		u'',
+		validators=[Required()],
+		render_kw={
+			"placeholder": u"确认密码",
+			"style": "background-color: transparent;"
+		}
+	)
+	submit = SubmitField(
+		u'注册',
+		render_kw={
+			"style": "background-color: transparent;"
+		}
+	)
 
 	def validate_username(self, field):
 		if User.query.filter_by(username=field.data).first():

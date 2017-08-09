@@ -11,19 +11,34 @@ html {
 body {
 	background: black;
 }
-
+#container {
+	height: 100%;
+	width: 100%;
+}
+.row {
+	height: 100%;
+}
 #map {
     height: 100%;
-    width: 75%;
+    width: 100%;
     cursor: url('../../img/mouse/Link.cur'), crosshair;
     float: left;
+    padding: 0;
+}
+#mapFrame {
+	height: 100%;
+	padding-left: 0;
+	padding-right: 0;
+}
+#catalogFrame {
+	height: 100%;
+	padding-left: 0;
+	padding-right: 0;
 }
 #catalog {
 	position: relative;
 	height: 100%;
-	width: 25%;
 	cursor: url('../../img/mouse/Normal.cur'), crosshair;
-	float: right;	
 }
 #footer {
 	position: absolute;
@@ -36,12 +51,8 @@ body {
     font-family: 'STXiHei';
     color: white;
 }
-.catalogContent {
-	color: white;
-	font-family: 'STXiHei';
-}
 .listPrefix10 {
-	height: 22px;
+	height: 20px;
 	padding-left: 6px;
 	padding-right: 0px;
 }
@@ -49,6 +60,13 @@ body {
 	height: 12px;
 	padding-left: 16px;
 	padding-right: 8px;
+}
+.catalog {
+	width: 100%;
+}
+#row {
+	padding-left: 0;
+	padding-right: 0;
 }
 hr {
 	width: 95%;
@@ -74,4 +92,41 @@ a:visited {
 	color: white;
 	text-decoration: none;
 	cursor: url('../../img/mouse/Link.cur'), crosshair;
+}
+.log {
+	color: white;
+	padding-left: 15%;
+	padding-right: 15%;
+}
+.panel {
+	background-color: black;
+	border-color: black;
+	color: white;
+}
+.panel-default>.panel-heading {
+	background-color: black;
+	border-color: black;
+	color: white;
+	font-family: 'STXiHei';
+	font-size: 18px;
+	padding-top: 15px;
+	padding-bottom: 10px;
+}
+.panel-body {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	font-family: 'STXiHei';
+}
+.panel-footer {
+	background-color: black;
+	border-top-color: black;
+	position: absolute;
+	bottom: 0;
+	height: 30px;
+	width: 100%;
+    padding: 5px;
+    text-align: center;
+    font-size: 16px;
+    font-family: 'STXiHei';
+    color: grey;
 }

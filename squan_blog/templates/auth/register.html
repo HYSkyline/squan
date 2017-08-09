@@ -1,13 +1,27 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}注册页{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="../static/lib/css/register.css">
+{% endblock %}
+{% block title %}双犬·远星{% endblock %}
 
-{% block page_content %}
-<div class="page-header">
-    <h1 style="font-family: 'Microsoft YaHei UI Light'">注册</h1>
-</div>
-<div class="col-md-4">
-    {{ wtf.quick_form(form) }}
+{% block body %}
+<div class="container">
+	<div class="row">
+		<form action="" method="post" class="form" role="form">
+			<div class="col-md-8" id="loginFrame">
+				<div class="loginContent">
+					{{ form.hidden_tag() }}
+					{{ wtf.form_field(form.username) }}
+					{{ wtf.form_field(form.password) }}
+					{{ wtf.form_field(form.password2) }}
+					{{ wtf.form_field(form.submit) }}
+					<a href="{{ url_for('main.home') }}" id="return">退回主页</a>
+				</div>
+			</div>
+		</form>
+	</div>
 </div>
 {% endblock %}
