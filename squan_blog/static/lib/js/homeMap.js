@@ -52,7 +52,7 @@ function initMap() {
         elementType: "geometry",
         stylers: [
           {
-            color: "#757575"
+            color: "#2a2a2a"
           }
         ]
       },
