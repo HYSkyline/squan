@@ -12,17 +12,18 @@ def login():
 	form = LoginForm()
 	if form.validate_on_submit():
 		user = User.query.filter_by(username=form.username.data).first()
-		if user is not None and user.verify_password(form.password.data):
+		if user.verify_password(form.password.data):
 			login_user(user, form.remember_me.data)
 			return redirect(request.args.get('next') or url_for('main.home'))
-		flash('Invalid username or password.')
+		else:
+			flash(u'密码错误.')
 	return render_template('auth/login.html', form=form)
 
 
 @auth.route('/logout')
 def logout():
 	logout_user()
-	flash('You have logged out.')
+	flash(u'已退出登录.')
 	return redirect(url_for('main.home'))
 
 
@@ -35,12 +36,6 @@ def register():
 			password=form.password.data
 		)
 		db.session.add(user)
-		flash('You can login now.')
+		flash(u'注册确认完成，现可登录.')
 		return redirect(url_for('auth.login'))
 	return render_template('auth/register.html', form=form)
-
-
-@auth.route('/secret')
-@login_required
-def secret():
-	return 'Only login-in user can pass me.'
