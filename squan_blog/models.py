@@ -3,6 +3,15 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from . import db, login_manager
+from geoalchemy2 import Geometry
+
+
+class LoginLocation(db.Model):
+    __tablename__ = 'loginlocation'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(32))
+    logintime = db.Column(db.DateTime)
+    loginlocation = db.Column(Geometry('POINT'))
 
 
 class Role(db.Model):
