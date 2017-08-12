@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
   <head>
-    <title>Styled Map Test</title>
+    <title>持灯</title>
     <meta charset="utf-8">
     <script type="text/javascript" src="../static/lib/js/jquery-3.2.1.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -46,5 +46,24 @@
   </body>
   <script type="text/javascript">
   	document.body.onload = initMap()
+  </script>
+  <script type="text/javascript">
+	var visibilityChange;
+	if (typeof document.hidden !== "undefined") {
+		visibilityChange = "visibilitychange";
+	} else if (typeof document.mozHidden !== "undefined") {
+		visibilityChange = "movisibilitychange";
+	} else if (typeof document.msHidden !== "undefined") {
+		visibilityChange = "msvisibilitychange";
+	} else if (typeof document.webkitHidden !== "undefined") {
+		visibilityChange = "webkitvisibilitychange";
+	}
+	document.addEventListener(visibilityChange, function() {
+		if (document.hidden) {
+			document.title = '熄灯';
+		} else {
+			document.title = '持灯';
+		}
+	}, false);
   </script>
 </html>

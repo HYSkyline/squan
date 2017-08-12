@@ -55,4 +55,23 @@
 	</div>
 </div>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0E4PXo_E_p7wsE2kYsxxkm6wzPu9bd7o&callback=initMap" async defer></script>
+<script type="text/javascript">
+	var visibilityChange;
+	if (typeof document.hidden !== "undefined") {
+		visibilityChange = "visibilitychange";
+	} else if (typeof document.mozHidden !== "undefined") {
+		visibilityChange = "movisibilitychange";
+	} else if (typeof document.msHidden !== "undefined") {
+		visibilityChange = "msvisibilitychange";
+	} else if (typeof document.webkitHidden !== "undefined") {
+		visibilityChange = "webkitvisibilitychange";
+	}
+	document.addEventListener(visibilityChange, function() {
+		if (document.hidden) {
+			document.title = '双犬·平闇';
+		} else {
+			document.title = '双犬·持灯';
+		}
+	}, false);
+</script>
 {% endblock %}
