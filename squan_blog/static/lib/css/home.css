@@ -102,6 +102,10 @@ a:visited {
 	background-color: black;
 	border-color: black;
 	color: white;
+	margin-bottom: 0;
+}
+.panel-default {
+	margin-bottom: 0;
 }
 .panel-default>.panel-heading {
 	background-color: black;
