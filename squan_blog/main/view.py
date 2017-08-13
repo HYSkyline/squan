@@ -23,3 +23,8 @@ def home():
 @login_required
 def secret():
 	return render_template('secret.html')
+
+
+@main.route('/test')
+def test():
+	return render_template('test.html')
