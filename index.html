@@ -2,7 +2,7 @@
 <html lang="zh-cn">
 
 <head>
-<title>双犬·红烛昏罗帐</title>
+<title>双犬·红烛</title>
 <meta charset="utf-8">
 <meta name="keywords" content="韩双犬,HYSkyline">
 <meta name="description" content="韩双犬的个人网页">
@@ -19,11 +19,40 @@
 
 <body onload="showTime()">
 <div class="container" id="container">
-	<div class="timeArea" onclick="page_exit()">
+	<div class="timeArea">
 	    <div id="Current_Time_Area" class="timeZone"></div>
 	    <div id="Left_Time_Area" class="timeZone"></div>
+	    <button onclick="getLocation()">TEST</button>
 	</div>
 </div>
 </body>
+<script>
+	function getLocation() {
+	    if (navigator.geolocation) {
+	        navigator.geolocation.getCurrentPosition(showPosition);
+	    } else {
+	        alert("Geolocation is not supported by this browser.");
+	    }
+	}
 
+	function showPosition(position) {
+	    alert('Position: ' + position.coords.latitude + ', ' + position.coords.longitude);
+	}
+	function showError(error) {
+	    switch(error.code) {
+	        case error.PERMISSION_DENIED:
+	            x.innerHTML = "User denied the request for Geolocation."
+	            break;
+	        case error.POSITION_UNAVAILABLE:
+	            x.innerHTML = "Location information is unavailable."
+	            break;
+	        case error.TIMEOUT:
+	            x.innerHTML = "The request to get user location timed out."
+	            break;
+	        case error.UNKNOWN_ERROR:
+	            x.innerHTML = "An unknown error occurred."
+	            break;
+	    }
+	}
+</script>
 </html>
