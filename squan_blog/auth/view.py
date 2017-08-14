@@ -36,6 +36,13 @@ def register():
 			password=form.password.data
 		)
 		db.session.add(user)
-		flash(u'注册确认完成，现可登录.')
+		flash(u'注册程序完成，现可登录.')
 		return redirect(url_for('auth.login'))
 	return render_template('auth/register.html', form=form)
+
+
+@auth.route('/userinfo/<username>')
+@login_required
+def userinfo(username):
+	user = User.query.filter_by(username=username).first_or_404()
+	return render_template('auth/userinfo.html', user=user)
