@@ -31,7 +31,8 @@ body {
 	transform: translate(-50%, -50%);
 	color: white;
 	font-family: 'STXiHei';
-	width: 20%;
+	width: 60%;
+	max-width: 240px;
 	height: 100%;
 	margin: 0 auto;
 }
