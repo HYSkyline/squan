@@ -2,7 +2,7 @@ function initMap() {
   map= new google.maps.Map(document.getElementById('map'), {
     center:{
       lat: 30.8438174820,
-      lng: 120.9395376068
+      lng: 120.8395376068
     },
     zoom: 8,
     disableDefaultUI: true,
@@ -216,41 +216,4 @@ function initMap() {
   map.setOptions({
     draggableCursor: 'url(../static/img/mouse/Normal.cur), crosshair'
   });
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition, showError);
-  } else {
-    alert('当前设备环境不支持定位')
-  }
-
-}
-function showPosition(position) {
-  // console.log('console-> showing position.')
-  myLng = position.coords.longitude;
-  myLat = position.coords.latitude;
-  console.log('console-> position:' + myLat + ',' + myLng);
-  catchPosition(myLat, myLng);
-
-  var cPosition = coordtransform.wgs84togcj02(myLng, myLat);
-  var cLng = cPosition[0];
-  var cLat = cPosition[1];
-  console.log('console-> cposition:' + cPosition);
-
-  map.setCenter(new google.maps.LatLng(cLat, cLng));
-}
-function showError(error) {
-  switch(error.code) {
-    case error.PERMISSION_DENIED:
-      alert("本次定位将不被执行");
-      break;
-    case error.POSITION_UNAVAILABLE:
-      alert("返回值异常,本次定位失败");
-      break;
-    case error.TIMEOUT:
-      alert("定位时间过长，已撤回定位命令");
-      break;
-    case error.UNKNOWN_ERROR:
-      alert("未知定位错误");
-      break;
-  }
 }

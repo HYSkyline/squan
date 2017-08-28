@@ -3,7 +3,7 @@
 from flask import redirect, request, url_for
 from . import api
 from .. import db
-from ..models import User, LoginLocation
+# from ..models import User, LoginLocation
 
 @api.route('/loginlocation/', methods=['POST'])
 def loginlocation():

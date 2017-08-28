@@ -6,12 +6,10 @@ from squan_blog import create_app, db
 from squan_blog.models import User, Role
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
-from OpenSSL import SSL
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
 migrate = Migrate(app, db)
-
 
 
 def make_shell_context():
@@ -29,7 +27,4 @@ def test():
 
 
 if __name__ == '__main__':
-	context = SSL.Context(SSL.SSLv23_METHOD)
-	context.load_cert_chain('squan_blog.crt', 'squan_blog.key')
-
-    manager.run(ssl_context=context)
+    manager.run()
