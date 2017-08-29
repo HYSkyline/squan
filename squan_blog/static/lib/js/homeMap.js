@@ -4,7 +4,7 @@ function initMap() {
       lat: 30.8438174820,
       lng: 120.8395376068
     },
-    zoom: 8,
+    zoom: 9,
     disableDefaultUI: true,
     styles:[
       {
