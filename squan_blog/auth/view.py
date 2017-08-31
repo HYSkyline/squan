@@ -41,7 +41,7 @@ def register():
 	return render_template('auth/register.html', form=form)
 
 
-@auth.route('/userinfo/<username>')
+@auth.route('/userinfo/<username>', methods=['GET', 'POST'])
 @login_required
 def userinfo(username):
 	user = User.query.filter_by(username=username).first_or_404()

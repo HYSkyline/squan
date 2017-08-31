@@ -40,11 +40,11 @@
 			{% if current_user.is_authenticated %}
 				<a href="{{ url_for('auth.userinfo', username=current_user.username) }}" class="authinfo">
 	    			<img src="{{ url_for('static', filename='img/list/white/10.png') }}" class="listPrefix01" />
-	    			个人信息
+	    			设置
 	    		</a>
 	    		<a href="{{ url_for('auth.logout') }}" class="authinfo">
 	    			<img src="{{ url_for('static', filename='img/list/white/10.png') }}" class="listPrefix01" />
-	    			退出登录
+	    			退出
 	    		</a>
 			{% else %}
 	    		<a href="{{ url_for('auth.login') }}" class="authinfo">

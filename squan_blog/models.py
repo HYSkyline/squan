@@ -24,6 +24,9 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(16))
     password_hash = db.Column(db.String(128))
     role_id = db.Column(db.Integer, db.ForeignKey('rolelist.role_id'))
+    birthdate = db.Column(db.Date)
+    intr = db.Column(db.Text)
+    prefix = db.Column(db.Boolean)
 
 
     def __repr__(self):

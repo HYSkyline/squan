@@ -1,9 +1,18 @@
 {% extends "base.html" %}
 
-{% block title %}设置·{{ user.username }}{% endblock %}
+{% block title %}初度·{{ current_user.username }}{% endblock %}
 
 {% block page_content %}
+{% if current_user.username != user.username %}
+<script type="text/javascript">
+	alert('不起刀兵,不染浮尘. 惟贤惟德,能服于人.');
+	window.history.go(-1);
+</script>
+{% endif %}
 <div class="page-header">
-    <h4>Hola!{{ user.username }}</h4>
+    <h4>Hola!{{ current_user.username }}</h4>
+    <p>birthdate: {{ current_user.birthdate }}</p>
+    <p>是否使用前缀: {{ current_user.prefix }}</p>
+    <p>{{ current_user.intr }}</p>
 </div>
 {% endblock %}
