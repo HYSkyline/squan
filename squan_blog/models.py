@@ -8,7 +8,7 @@ from geoalchemy2 import Geometry
 
 class Role(db.Model):
     __tablename__ = 'rolelist'
-    id = db.Column(db.Integer, primary_key=True)
+    rid = db.Column(db.Integer, primary_key=True)
     role_id = db.Column(db.INTEGER)
     role_name = db.Column(db.String(32))
     users = db.relationship('User', backref='role', lazy='dynamic')
@@ -19,7 +19,7 @@ class Role(db.Model):
 
 class User(UserMixin, db.Model):
     __tablename__ = 'userlist'
-    id = db.Column(db.Integer, primary_key=True)
+    uid = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), unique=True)
     password = db.Column(db.String(16))
     password_hash = db.Column(db.String(128))
@@ -45,6 +45,13 @@ class User(UserMixin, db.Model):
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+
+    def get_id(self):
+        try:
+            return unicode(self.uid)
+        except AttributeError:
+            raise NotImplementedError('No id attribute - override get_id()')
 
 
 @login_manager.user_loader

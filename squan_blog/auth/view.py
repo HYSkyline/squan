@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 from flask import render_template, redirect, request, url_for, flash
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 from . import auth
 from .. import db
 from ..models import User, Quiz
@@ -58,4 +58,7 @@ def register():
 def userinfo(username):
 	user = User.query.filter_by(username=username).first()
 	user_quiz = Quiz.query.filter_by(quizee=username).first()
-	return render_template('auth/userinfo.html', user=user, quiz=user_quiz)
+	if user.username == current_user.username:
+		return render_template('auth/userview.html', user=user, quiz=user_quiz)
+	else:
+		return render_template('auth/userinfo.html', user=user, quiz=user_quiz)
