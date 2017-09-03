@@ -5,7 +5,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from . import auth
 from .. import db
 from ..models import User, Quiz
-from .forms import LoginForm, RegistrationForm
+from .forms import LoginForm, RegistrationForm, InfoEditForm
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -62,3 +62,19 @@ def userinfo(username):
 		return render_template('auth/userview.html', user=user, quiz=user_quiz)
 	else:
 		return render_template('auth/userinfo.html', user=user, quiz=user_quiz)
+
+
+@auth.route('/infoedit', methods=['GET', 'POST'])
+@login_required
+def infoedit():
+	form = InfoEditForm()
+	user_quiz = Quiz.query.filter_by(quizee=current_user.username).first()
+	if form.validate_on_submit():
+		current_user.birthdate = form.birthdate.data
+		current_user.intr = form.intrtext.data
+		db.session.add(current_user)
+		flash(u'信息更新完成')
+		return redirect(url_for('.userinfo', username=current_user.username))
+	form.birthdate.data = current_user.birthdate
+	form.intrtext.data = current_user.intr
+	return render_template('auth/infoedit.html',user=current_user, form=form)

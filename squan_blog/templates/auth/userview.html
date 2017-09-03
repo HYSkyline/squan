@@ -19,6 +19,7 @@
 <div class="article" id="quizChart" style="width: 500px; height: 500px;">
 	quiz result charts.
 </div>
+<a href="{{ url_for('.infoedit') }}">编辑资料</a>
 {% block quiz_chart %}
 <script type="text/javascript">
 	var myChart = echarts.init(document.getElementById('quizChart'), 'macarons');

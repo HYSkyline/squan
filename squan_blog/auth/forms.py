@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, DateField, TextField
 from wtforms.validators import Required, Regexp, Length, Email, EqualTo
 from wtforms import ValidationError
 from ..models import User
@@ -40,7 +40,7 @@ class RegistrationForm(FlaskForm):
 		u'',
 		validators=[
 			Required(u'输入用户名'), 
-			Length(1, 16),
+			Length(1, 32),
 			Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0, u'用户名只能由字母+数字+下划线组成.')
 		],
 		render_kw={
@@ -74,3 +74,32 @@ class RegistrationForm(FlaskForm):
 	def validate_username(self, field):
 		if User.query.filter_by(username=field.data).first():
 			raise ValidationError(u'用户名已被注册')
+
+
+class InfoEditForm(FlaskForm):
+	birthdate = DateField(
+		u'',
+		validators=[
+			Required(u"输入纪念日或生日"),
+		],
+		format='%Y/%m/%d',
+		render_kw={
+			"style": "background-color: transparent;"
+		}
+	)
+	intrtext = TextField(
+		u'',
+		validators=[
+			Required()
+		],
+		render_kw={
+			"placeholder": u"简介",
+			"style": "background-color: transparent;"
+		}
+	)
+	submit = SubmitField(
+		u'确认更新',
+		render_kw={
+			"style": "background-color: transparent;"
+		}
+	)
