@@ -27,6 +27,7 @@ class User(UserMixin, db.Model):
     birthdate = db.Column(db.Date)
     intr = db.Column(db.Text)
     prefix = db.Column(db.Boolean)
+    avatar = db.Column(db.Text)
 
 
     def __repr__(self):

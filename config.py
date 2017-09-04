@@ -20,9 +20,9 @@ class Config:
     FLASK_ADMIN = os.environ.get('FLASK_ADMIN')
     FLASK_ADMIN_EMAIL = os.environ.get('FLASK_ADMIN_EMAIL') or init_config['FLASK_ADMIN_EMAIL']
     MAIL_USE_TLS = True
-    FLASKY_MAIL_SUBJECT_PREFIX = os.environ.get('FLASKY_MAIL_SUBJECT_PREFIX') or\
-                                 init_config['FLASKY_MAIL_SUBJECT_PREFIX']
+    FLASKY_MAIL_SUBJECT_PREFIX = os.environ.get('FLASKY_MAIL_SUBJECT_PREFIX') or init_config['FLASKY_MAIL_SUBJECT_PREFIX']
     FLASKY_MAIL_SENDER = os.environ.get('FLASKY_MAIL_SENDER') or init_config['FLASKY_MAIL_SENDER']
+    UPLOADED_AVATARS_DEST = os.environ.get('UPLOADED_AVATARS_DEST') or init_config['UPLOADED_AVATARS_DEST']
 
     @staticmethod
     def init_app(app):

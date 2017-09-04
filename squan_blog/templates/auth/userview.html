@@ -8,13 +8,14 @@
 
 {% block page_content %}
 <div class="page-header">
+	<img src="{{ url_for('static', filename='img/avatar/' + user.avatar) }}" style="height: 200px;" />
 	{% if user.prefix == True %}
     	<h4>Hola! [{{ quiz.quiz_rec }}]{{ user.username }}</h4>
     {% else %}
     	<h4>Hola! {{ user.username }}</h4>
     {% endif %}
     <p>birthdate: {{ user.birthdate }}</p>
-    <p>{{ user.intr }}</p>
+    <textarea readonly="readonly">{{ user.intr }}</textarea>
 </div>
 <div class="article" id="quizChart" style="width: 500px; height: 500px;">
 	quiz result charts.

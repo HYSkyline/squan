@@ -1,11 +1,13 @@
 # -*- coding:utf-8 -*-
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, DateField, TextField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, DateField, TextField, TextAreaField, FileField
+from flask_wtf.file import FileField, FileAllowed, FileRequired
 from wtforms.validators import Required, Regexp, Length, Email, EqualTo
 from wtforms import ValidationError
 from ..models import User
 from werkzeug.security import generate_password_hash, check_password_hash
+from .. import avatars
 
 
 class LoginForm(FlaskForm):
@@ -77,17 +79,26 @@ class RegistrationForm(FlaskForm):
 
 
 class InfoEditForm(FlaskForm):
+	avatarimg = FileField(
+		u'',
+		validators=[
+			FileAllowed(avatars, u'头像只能是图片……?')
+		],
+		render_kw={
+			'style': "background-color:transparent;"
+		}
+	)
 	birthdate = DateField(
 		u'',
 		validators=[
 			Required(u"输入纪念日或生日"),
 		],
-		format='%Y/%m/%d',
 		render_kw={
+			'type': 'date',
 			"style": "background-color: transparent;"
 		}
 	)
-	intrtext = TextField(
+	intrtext = TextAreaField(
 		u'',
 		validators=[
 			Required()
