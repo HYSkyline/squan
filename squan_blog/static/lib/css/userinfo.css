@@ -1,0 +1,20 @@
+html, body {
+	background-color: white;
+	padding: 5px;
+}
+#avatar {
+	width: 100%;
+	height: auto;
+}
+.page-header {
+	margin-top: 0;
+}
+.listPrefix01 {
+	height: 12px;
+	padding-right: 8px;
+}
+#quizChart {
+	width: 100%;
+	height: auto;
+	min-height: 240px;
+}
