@@ -1,13 +1,61 @@
-html, body {
-	background-color: white;
-	padding: 5px;
+* {
+	cursor: url('../../img/mouse/Normal.cur'), crosshair;
+	font-family: 'STXiHei';
+}
+html {
+	padding: 0;
+}
+body {
+	background: transparent;
+	color: white;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+@media screen and (max-device-width: 760px) {
+	html {
+		background-image: url('../../img/userinfoBackground12.jpg');
+		background-repeat: repeat;
+	}
+	.container-fluid {
+		width: 90%;
+	}
+}
+@media screen and (min-device-width: 761px) {
+	html {
+		background-image: url('../../img/userinfoBackground6.jpg');
+		background-repeat: repeat;
+	}
+	.container-fluid {
+		width: 60%;
+	}
+	.col-xs-3 {
+		padding-left: 0;
+	}
 }
 #avatar {
 	width: 100%;
 	height: auto;
 }
-.page-header {
+#intoInfo {
+	padding-top: 20px;
+}
+#nameInfo {
+	margin-top: -20px;
+}
+#editinfo {
+	margin-top: 2px;
+	color: white;
+	background-color: transparent;
+	cursor: url('../../img/mouse/Link.cur'), pointer;
+	font-size: 12px;
+}
+hr {
+	width: 100%;
 	margin-top: 0;
+	margin-bottom: 10px;
+	border-top-color: rgba(255, 255, 255, 0.3);
 }
 .listPrefix01 {
 	height: 12px;
@@ -16,5 +64,5 @@ html, body {
 #quizChart {
 	width: 100%;
 	height: auto;
-	min-height: 240px;
+	min-height: 300px;
 }

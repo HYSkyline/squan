@@ -8,39 +8,70 @@
 {% block title %}初度·{{ current_user.username }}{% endblock %}
 
 {% block page_content %}
-
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-md-3">
+		<div class="col-md-8">
 			<img id="avatar" src="{{ url_for('static', filename='img/avatar/' + user.avatar) }}" class="img-rounded" alt="苏幕遮" />
 		</div>
-		<div class="col-md-3">
-			<div class="page-header">
-				{% if user.prefix == True %}
-			    	<h2>[{{ quiz.quiz_rec }}]{{ user.username }}</h2>
-			    {% else %}
-			    	<h2>{{ user.username }}</h2>
-			    {% endif %}
+		<div class="col-md-4">
+			<!-- 姓名抬头 -->
+			<div class="row">
+				{% if current_user.username == user.username %}
+					<div class="col-xs-9" id="nameInfo">
+						<div>
+							{% if user.prefix == True %}
+						    	<h2>[{{ quiz.quiz_rec }}]{{ user.username }}</h2>
+						    {% else %}
+						    	<h2>{{ user.username }}</h2>
+						    {% endif %}
+						</div>
+					</div>
+					<div class="col-xs-3">
+						<a href="{{ url_for('.infoedit') }}" id="editinfo" class="btn btn-default" role="button">编辑</a>
+					</div>
+				{% else %}
+					<div class="col-xs-12" id="nameInfo">
+						<div>
+							{% if user.prefix == True %}
+						    	<h2>[{{ quiz.quiz_rec }}]{{ user.username }}</h2>
+						    {% else %}
+						    	<h2>{{ user.username }}</h2>
+						    {% endif %}
+						</div>
+					</div>
+				{% endif %}
 			</div>
-			<p>
-				<img src="{{ url_for('static', filename='img/list/black/1.png') }}" class="listPrefix01" />
-				{{ user.birthdate }}
-			</p>
-			<p>
-				<img src="{{ url_for('static', filename='img/list/black/1.png') }}" class="listPrefix01" />
-				{{ user.intr }}
-			</p>
-			{% if current_user.username == user.username %}
-			<a href="{{ url_for('.infoedit') }}" class="btn btn-default" role="button">编辑</a>
-			{% endif %}
+			<hr />
+			<!-- 主要信息 -->
+			<div class="row" id="mainInfo">
+				<div class="col-md-12">
+					{% block userintr%}
+						<p>
+							<img src="{{ url_for('static', filename='img/list/white/1.png') }}" class="listPrefix01" />
+							{{ user.birthdate }}
+						</p>
+						<p>
+							<img src="{{ url_for('static', filename='img/list/white/1.png') }}" class="listPrefix01" />
+							{{ user.intr }}
+						</p>
+					{% endblock %}
+				</div>
+			</div>
+			<!-- 测试图表 -->
+			<div class="row">
+				{% block quiz_chart %}
+					<div class="article" id="quizChart">chart.</div>
+				{% endblock %}
+			</div>
 		</div>
-		<div class="col-md-6">
-			<div class="article" id="quizChart">chart.</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<p>没想好写什么</p>
 		</div>
 	</div>
 </div>
 
-{% block quiz_chart %}
 <script type="text/javascript">
 	var myChart = echarts.init(
 		document.getElementById('quizChart'),
@@ -92,14 +123,14 @@
 	        splitLine: {
 	            lineStyle: {
 	                color: [
-	                    'rgba(100, 100, 100, 0.05)', 
-	                    'rgba(100, 100, 100, 0.10)',
-	                    'rgba(100, 100, 100, 0.15)', 
-	                    'rgba(100, 100, 100, 0.20)',
-	                    'rgba(100, 100, 100, 0.25)', 
-	                    'rgba(100, 100, 100, 0.30)',
-	                    'rgba(100, 100, 100, 0.35)', 
-	                    'rgba(100, 100, 100, 0.40)'
+	                    'rgba(200, 200, 200, 0.05)', 
+	                    'rgba(200, 200, 200, 0.10)',
+	                    'rgba(200, 200, 200, 0.15)', 
+	                    'rgba(200, 200, 200, 0.20)',
+	                    'rgba(200, 200, 200, 0.25)', 
+	                    'rgba(200, 200, 200, 0.30)',
+	                    'rgba(200, 200, 200, 0.35)', 
+	                    'rgba(200, 200, 200, 0.40)'
 	                ].reverse()
 	            }
 	        },
@@ -108,13 +139,13 @@
 	        },
 	        axisLine: {
 	            lineStyle: {
-	                color: 'rgba(200, 200, 200, 0.7)'
+	                color: 'rgba(100, 100, 100, 0.5)'
 	            }
 	        }
 	    },
 	    series: [
 	        {
-	            name: '并没有任何用处的测试结果',
+	            name: '无聊测试',
 	            type: 'radar',
 	            tooltip: {
                 	trigger: 'item'
@@ -124,7 +155,7 @@
 	            symbol: 'none',
 	            itemStyle: {
 	                normal: {
-	                    color: 'rgba(0, 0, 0, 1)'
+	                    color: 'rgba(255, 255, 255, 1)'
 	                }
 	            },
 	            areaStyle: {
@@ -137,5 +168,4 @@
 	};
 	myChart.setOption(option);
 </script>
-{% endblock %}
 {% endblock %}
