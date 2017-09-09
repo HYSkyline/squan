@@ -109,7 +109,7 @@ class InfoEditForm(FlaskForm):
 		}
 	)
 	submit = SubmitField(
-		u'确认更新',
+		u'确认',
 		render_kw={
 			"style": "background-color: transparent;"
 		}

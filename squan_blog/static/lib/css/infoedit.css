@@ -1,0 +1,75 @@
+* {
+	cursor: url('../../img/mouse/Normal.cur'), crosshair;
+	font-family: 'STXiHei';
+}
+html {
+	padding: 0;
+}
+body {
+	background: transparent;
+	color: white;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+@media screen and (max-device-width: 760px) {
+	html {
+		background-image: url('../../img/userinfoBackground12.jpg');
+		background-repeat: repeat;
+	}
+	.container-fluid {
+		width: 90%;
+	}
+}
+@media screen and (min-device-width: 761px) {
+	html {
+		background-image: url('../../img/userinfoBackground6.jpg');
+		background-repeat: repeat;
+	}
+	.container-fluid {
+		width: 60%;
+	}
+}
+.form-control {
+	background-color: transparent;
+	font-family: 'STXiHei';
+	color: white;
+}
+.form-group {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+hr {
+	width: 100%;
+	margin-top: 0;
+	margin-bottom: 10px;
+	border-top-color: rgba(255, 255, 255, 0.3);
+}
+input#submit {
+	width: 100%;
+	color: white;
+	margin-top: 20px;
+	background-color: transparent;
+	cursor: url('../../img/mouse/Link.cur'), pointer;
+}
+.actionBtn {
+	width: 100%;
+	color: white;
+	background-color: transparent;
+	cursor: url('../../img/mouse/Link.cur'), pointer;
+	display: inline-block;
+	padding: 6px 12px;
+	margin-bottom: 0;
+	font-size: 14px;
+	text-align: center;
+	user-select: none;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	margin-top: 20px;
+	box-sizing: border-box;
+	align-items: flex-start;
+}
+.actionBtn:hover {
+	text-decoration: none;
+}
