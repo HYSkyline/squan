@@ -14,11 +14,17 @@
 		<form action="" method="post" class="form" role="form" enctype="multipart/form-data">
 			<div class="col-md-12" id="editFrame">
 				<div class="row">
-					<div class="col-md-12">
+					<div class="col-md-12" id="contentFrame">
 						{{ form.hidden_tag() }}
 						<h2>{{ user.username }}</h2>
 						<hr />
-						{{ wtf.form_field(form.avatarimg) }}
+						{{ wtf.form_field(form.avatarimg, style="height:0; display: none;") }}
+						<div id="avatarPreview"></div>
+						<div id="avatarLabel">
+							<label for="avatarimg">
+								<img id="avatarimgOrigin" src="{{ url_for('static', filename='img/avatar/' + user.avatar) }}" class="img-rounded" alt="上传头像" />
+							</label>
+						</div>
 						{{ wtf.form_field(form.birthdate) }}
 						{{ wtf.form_field(form.intrtext) }}
 					</div>
@@ -28,7 +34,7 @@
 						{{ wtf.form_field(form.submit) }}
 					</div>
 					<div class="col-md-4">
-						<button class="actionBtn" onclick="reset()">重置</button>
+						<a href="{{ url_for('.infoedit', username=current_user.username) }}" class="actionBtn">重置</a>
 					</div>
 					<div class="col-md-4">
 						<a href="{{ url_for('.userinfo', username=current_user.username) }}" class="actionBtn">回退</a>
@@ -47,4 +53,5 @@
 		document.getElementById('avatarimg').value = null;
 	}
 </script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/infoedit.js') }}"></script>
 {% endblock %}

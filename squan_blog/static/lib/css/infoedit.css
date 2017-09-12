@@ -31,6 +31,12 @@ body {
 		width: 60%;
 	}
 }
+#contentFrame {
+	text-align: center;
+}
+h2 {
+	text-align: left;
+}
 .form-control {
 	background-color: transparent;
 	font-family: 'STXiHei';
@@ -45,6 +51,32 @@ hr {
 	margin-top: 0;
 	margin-bottom: 10px;
 	border-top-color: rgba(255, 255, 255, 0.3);
+}
+div#avatarPreview {
+	text-align: center;
+}
+#avatarPreview img {
+	width: 350px;
+	border-radius: 10px;
+}
+#avatarimgCommit {
+	width: 30%;
+	min-width: 100px;
+	color: white;
+	background-color: transparent;
+	cursor: url('../../img/mouse/Link.cur'), pointer;
+	padding: 6px 12px;
+	margin-bottom: 0;
+	font-size: 14px;
+	text-align: center;
+	user-select: none;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	margin-top: 20px;
+	box-sizing: border-box;
+}
+#avatarimgOrigin {
+	width: 350px;
 }
 input#submit {
 	width: 100%;
@@ -72,4 +104,23 @@ input#submit {
 }
 .actionBtn:hover {
 	text-decoration: none;
+}
+a:link {
+	color: white;
+	cursor: url('../../img/mouse/Link.cur'), crosshair;
+}
+a:hover {
+	color: white;
+	text-decoration: none;
+	cursor: url('../../img/mouse/Link.cur'), crosshair;
+}
+a:active {
+	color: white;
+	text-decoration: none;
+	cursor: url('../../img/mouse/Link.cur'), crosshair;
+}
+a:visited {
+	color: white;
+	text-decoration: none;
+	cursor: url('../../img/mouse/Link.cur'), crosshair;
 }
