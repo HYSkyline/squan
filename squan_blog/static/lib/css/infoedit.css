@@ -21,6 +21,13 @@ body {
 	.container-fluid {
 		width: 90%;
 	}
+	#avatarPreview img {
+		width: 80%;
+		border-radius: 10px;
+	}
+	#avatarimgOrigin {
+		width: 80%;
+	}
 }
 @media screen and (min-device-width: 761px) {
 	html {
@@ -28,7 +35,14 @@ body {
 		background-repeat: repeat;
 	}
 	.container-fluid {
-		width: 60%;
+		width: 50%;
+	}
+	#avatarPreview img {
+		width: 50%;
+		border-radius: 10px;
+	}
+	#avatarimgOrigin {
+		width: 50%;
 	}
 }
 #contentFrame {
@@ -55,10 +69,7 @@ hr {
 div#avatarPreview {
 	text-align: center;
 }
-#avatarPreview img {
-	width: 350px;
-	border-radius: 10px;
-}
+
 #avatarimgCommit {
 	width: 30%;
 	min-width: 100px;
@@ -75,9 +86,7 @@ div#avatarPreview {
 	margin-top: 20px;
 	box-sizing: border-box;
 }
-#avatarimgOrigin {
-	width: 350px;
-}
+
 input#submit {
 	width: 100%;
 	color: white;

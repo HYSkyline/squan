@@ -21,6 +21,9 @@ body {
 	.container-fluid {
 		width: 90%;
 	}
+	#nameRow {
+		margin-top: 10px;
+	}
 }
 @media screen and (min-device-width: 761px) {
 	html {
@@ -29,9 +32,6 @@ body {
 	}
 	.container-fluid {
 		width: 60%;
-	}
-	.col-xs-3 {
-		padding-left: 0;
 	}
 }
 #avatar {
@@ -44,7 +44,12 @@ body {
 #nameInfo {
 	margin-top: -20px;
 }
+#editbtnrow {
+	text-align: right;
+}
 #editinfo {
+	position: relative;
+	text-align: right;
 	margin-top: 2px;
 	color: white;
 	background-color: transparent;
