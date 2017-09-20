@@ -9,5 +9,5 @@ function page_exit() {
 function redirectHome() {
 	var containerDiv = document.getElementById('container');
 	containerDiv.style.visibility = 'hidden';
-	window.location.href='https://github.com/HYSkyline';
+	window.location.href='http://HYSkyline.studio';
 }

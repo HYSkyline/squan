@@ -2,7 +2,7 @@
 <html lang="zh-cn">
 
 <head>
-<title>双犬·红烛</title>
+<title>双犬·淡雪</title>
 <meta charset="utf-8">
 <meta name="keywords" content="韩双犬,HYSkyline">
 <meta name="description" content="韩双犬的个人网页">
@@ -10,49 +10,25 @@
 <meta name="author" content="傲雪双犬,HYSkyline@163.com">
 <meta name="revisit-after" content="7days">
 <meta http-equiv="Cache-Control" content="no-siteapp" />
-
 <link rel="icon" type="image/x-icon" href="squan_blog/static/img/icon/sq.png">
 <link rel="stylesheet" type="text/css" href="squan_blog/static/lib/css/indexTime.css">
 <script type="text/javascript" src="squan_blog/static/lib/js/indexTime.js"></script>
 <script type="text/javascript" src="squan_blog/static/lib/js/pageExit.js"></script>
+<script type="text/javascript" src="squan_blog/static/lib/js/coord.js"></script>
+<script type="text/javascript" src="squan_blog/static/lib/js/coordtrans.js"></script>
 </head>
-
 <body onload="showTime()">
 <div class="container" id="container">
-	<div class="timeArea">
+	<div id="gmap"></div>
+	<div class="timeArea" onclick="page_exit()">
 	    <div id="Current_Time_Area" class="timeZone"></div>
 	    <div id="Left_Time_Area" class="timeZone"></div>
-	    <button onclick="getLocation()">TEST</button>
 	</div>
 </div>
-</body>
-<script>
-	function getLocation() {
-	    if (navigator.geolocation) {
-	        navigator.geolocation.getCurrentPosition(showPosition);
-	    } else {
-	        alert("Geolocation is not supported by this browser.");
-	    }
-	}
-
-	function showPosition(position) {
-	    alert('Position: ' + position.coords.latitude + ', ' + position.coords.longitude);
-	}
-	function showError(error) {
-	    switch(error.code) {
-	        case error.PERMISSION_DENIED:
-	            x.innerHTML = "User denied the request for Geolocation."
-	            break;
-	        case error.POSITION_UNAVAILABLE:
-	            x.innerHTML = "Location information is unavailable."
-	            break;
-	        case error.TIMEOUT:
-	            x.innerHTML = "The request to get user location timed out."
-	            break;
-	        case error.UNKNOWN_ERROR:
-	            x.innerHTML = "An unknown error occurred."
-	            break;
-	    }
-	}
+<script type="text/javascript" src="squan_blog/static/lib/js/indexMap.js"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_9PBWoCkG5I9_ARuCSbXZFLM3yGf1Wko&libraries=places&callback=initMap"></script>
+<script type="text/javascript">
+	getLocation();
 </script>
+</body>
 </html>
