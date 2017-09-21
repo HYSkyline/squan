@@ -12,6 +12,7 @@
 <meta http-equiv="Cache-Control" content="no-siteapp" />
 <link rel="icon" type="image/x-icon" href="squan_blog/static/img/icon/sq.png">
 <link rel="stylesheet" type="text/css" href="squan_blog/static/lib/css/indexTime.css">
+<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.0&key=022aad37b3ec25df2e88764089c4d4d2"></script>
 <script type="text/javascript" src="squan_blog/static/lib/js/indexTime.js"></script>
 <script type="text/javascript" src="squan_blog/static/lib/js/pageExit.js"></script>
 <script type="text/javascript" src="squan_blog/static/lib/js/coord.js"></script>
@@ -19,14 +20,13 @@
 </head>
 <body onload="showTime()">
 <div class="container" id="container">
-	<div id="gmap"></div>
+	<div id="amap"></div>
 	<div class="timeArea" onclick="page_exit()">
 	    <div id="Current_Time_Area" class="timeZone"></div>
 	    <div id="Left_Time_Area" class="timeZone"></div>
 	</div>
 </div>
 <script type="text/javascript" src="squan_blog/static/lib/js/indexMap.js"></script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_9PBWoCkG5I9_ARuCSbXZFLM3yGf1Wko&libraries=places&callback=initMap"></script>
 <script type="text/javascript">
 	getLocation();
 </script>
