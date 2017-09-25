@@ -60,7 +60,7 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-class Quiz(db.Model):
+class UserQuiz(db.Model):
     """用户的测试信息"""
     __tablename__ = 'userquiz'
     qid = db.Column(db.Integer, primary_key=True)

@@ -31,9 +31,11 @@ def create_app(config_name='default'):
     from .main import main as main_blueprint
     from .auth import auth as auth_blueprint
     from .api import api as api_blueprint
+    from .quiz import quiz as quiz_blueprint
     app.register_blueprint(main_blueprint)
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
     app.register_blueprint(api_blueprint, url_prefix='/api')
+    app.register_blueprint(quiz_blueprint, url_prefix='/quiz')
 
     configure_uploads(app, avatars)
     patch_request_class(app, 4194304)

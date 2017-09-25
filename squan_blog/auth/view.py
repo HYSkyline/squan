@@ -4,7 +4,7 @@ from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from . import auth
 from .. import db, avatars
-from ..models import User, Quiz
+from ..models import User, UserQuiz
 from .forms import LoginForm, RegistrationForm, InfoEditForm
 import time
 
@@ -36,7 +36,7 @@ def register():
 			username=form.username.data,
 			password=form.password.data
 		)
-		quiz = Quiz(
+		quiz = UserQuiz(
 			quizee = form.username.data,
 			r_score = 0,
 			a_score = 0,
@@ -58,7 +58,7 @@ def register():
 @login_required
 def userinfo(username):
 	user = User.query.filter_by(username=username).first()
-	user_quiz = Quiz.query.filter_by(quizee=username).first()
+	user_quiz = UserQuiz.query.filter_by(quizee=username).first()
 	if user:
 		if user.username == current_user.username:
 			return render_template('auth/userview.html', user=user, quiz=user_quiz)
@@ -72,7 +72,7 @@ def userinfo(username):
 @login_required
 def infoedit():
 	form = InfoEditForm()
-	user_quiz = Quiz.query.filter_by(quizee=current_user.username).first()
+	user_quiz = UserQuiz.query.filter_by(quizee=current_user.username).first()
 	if form.validate_on_submit():
 		if request.files['avatarimg']:
 			avatar_name = request.files['avatarimg'].filename

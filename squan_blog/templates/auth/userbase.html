@@ -168,4 +168,9 @@
 	};
 	myChart.setOption(option);
 </script>
+<script type="text/javascript">
+	document.getElementById('quizChart').onclick = function () {
+		window.location.href="{{ url_for('quiz.charquiz', username=current_user.username) }}";
+	}
+</script>
 {% endblock %}
