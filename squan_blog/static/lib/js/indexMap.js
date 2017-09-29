@@ -1,7 +1,8 @@
 var amap = new AMap.Map('amap', {
     resizeEnable: true,
     zoom: 14,
-    center: [120.1632803679, 30.2710905216]
+    center: [120.1632803679, 30.2710905216],
+	mapStyle: 'amap://styles/63914602e989a8dd823bf3c843baccea'
 });
 amap.setMapStyle('amap://styles/grey');
 amap.setFeatures('bg,road,building');
