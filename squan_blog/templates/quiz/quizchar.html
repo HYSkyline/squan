@@ -1,0 +1,54 @@
+{% extends "quiz/quizbase.html" %}
+
+{% block head %}
+{{ super() }}
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/fullPage.min.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/css/quizchar.css') }}">
+{% endblock %}
+
+{% block title %}{{ current_user.username }}·心の壁{% endblock %}
+
+{% block page_content %}
+<div id="quizContainer">
+	{% for headingIndex in range(quiz|count) %}
+	<div class="section" onclick="nextView()">
+		<h3>
+			{{ quiz[headingIndex].quizheading }}
+		</h3>
+		{% set quizoptionList = quiz[headingIndex].quizoption.split('||') %}
+		{% for optionIndex in range(quizoptionList|count) %}
+			<p>
+				{{ quizoptionList[optionIndex] }}
+			</p>
+		{% endfor %}
+	</div>
+	{% endfor %}
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#quizContainer').fullpage({
+            sectionsColor: getBackColor(),
+            'navigation': true
+        })
+    });
+    function getBackColor() {
+        var colorList = [];
+        var colorCount = {{ quiz|count }};
+        var colorDivide = 360 / colorCount;
+        for (var i = 0; i < colorCount; i++) {
+            var backColor = 'hsl(' + Math.floor(i * colorDivide + Math.random() * (colorDivide + 1) / 2).toString() + ', 15%, 10%)';
+            colorList.push(backColor);
+        }
+        var colorListSort = [];
+        for (var i = colorList.length - 1; i >= 0; i--) {
+        	var j = Math.floor(Math.random() * colorList.length);
+        	colorListSort[i] = colorList[j];
+        	colorList.splice(j, 1);
+        }
+        return colorListSort;
+    }
+    function nextView() {
+        $.fn.fullpage.moveSectionDown();
+    }
+</script>
+{% endblock %}

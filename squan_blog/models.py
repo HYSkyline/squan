@@ -78,3 +78,18 @@ class UserQuiz(db.Model):
 
     def __repr__(self):
         return '<Quizee %r>' % self.quizee
+
+
+class Quiz(db.Model):
+    """测试库内的测试题目(含选项)数据"""
+    __tablename__ = 'quiz'
+    quizid = db.Column(db.Integer, primary_key=True)
+    projectname = db.Column(db.Text)
+    sponsor = db.Column(db.String(32))
+    sponsortime = db.Column(db.DateTime(timezone=True))
+    quizheading = db.Column(db.Text)
+    quizoption = db.Column(db.Text)
+
+
+    def __repr__(self):
+        return '<Quiz heading: %r' % self.quizheading
