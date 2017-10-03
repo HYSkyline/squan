@@ -10,19 +10,24 @@
 
 {% block page_content %}
 <div id="quizContainer">
+    <form id="quizForm" method="post">
 	{% for headingIndex in range(quiz|count) %}
 	<div class="section" onclick="nextView()">
 		<h3>
 			{{ quiz[headingIndex].quizheading }}
 		</h3>
+        <input type="text" name="{{ 'head' + headingIndex|string }}" value="{{ quiz[headingIndex].quizheading }}" />
 		{% set quizoptionList = quiz[headingIndex].quizoption.split('||') %}
 		{% for optionIndex in range(quizoptionList|count) %}
-			<p>
+			<p id="{{ 'head' + headingIndex|string + '-opt' + optionIndex|string }}" onclick="checkOption(this)">
 				{{ quizoptionList[optionIndex] }}
 			</p>
 		{% endfor %}
+        <input class="quizAnswer" type="text" name="{{ 'head' + headingIndex|string + '-opt' }}" />
 	</div>
 	{% endfor %}
+    <input type="submit" name="quizSubmit" value="OK" />
+    </form>
 </div>
 <script type="text/javascript">
     $(function () {
@@ -41,14 +46,31 @@
         }
         var colorListSort = [];
         for (var i = colorList.length - 1; i >= 0; i--) {
-        	var j = Math.floor(Math.random() * colorList.length);
-        	colorListSort[i] = colorList[j];
-        	colorList.splice(j, 1);
+            var j = Math.floor(Math.random() * colorList.length);
+            colorListSort[i] = colorList[j];
+            colorList.splice(j, 1);
         }
         return colorListSort;
     }
     function nextView() {
         $.fn.fullpage.moveSectionDown();
+    }
+
+    function checkOption(optionElement) {
+        var input = document.getElementsByName(optionElement.id.slice(0, optionElement.id.length - 1))[0];
+        input.value = optionElement.innerHTML.replace(/\n|\r|\t/g, '');
+
+        var inputAnswer = document.getElementsByClassName('quizAnswer');
+        var inputComplete = true;
+        for (var i = 0; i < inputAnswer.length; i++) {
+            if (inputAnswer[i].value == '') {
+                inputComplete = false;
+                break;
+            }
+        }
+        if (inputComplete) {
+            document.getElementById('quizForm').submit();
+        }
     }
 </script>
 {% endblock %}

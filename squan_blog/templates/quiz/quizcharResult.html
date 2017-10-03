@@ -1,0 +1,32 @@
+{% extends "quiz/quizbase.html" %}
+
+{% block title %}{{ current_user.username }}·心の壁{% endblock %}
+
+{% block head %}
+{{ super() }}
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/echarts.min.js') }}"></script>
+{% endblock %}
+
+{% block page_content %}
+<h2>测试人:{{ current_user.username }}</h2>
+<p id="quiztime"></p>
+<p>------------------------------</p>
+
+{% for i in range(chardata|count) %}
+	<p>题目: {{ chardata[i].quizheading }}</p>
+	<p>选择: {{ chardata[i].quizanswer }}</p>
+	<p>------------------------------</p>
+{% endfor %}
+
+<script type="text/javascript">
+	var quiztime = new Date({{ chardata[chardata|count - 1].quiztime * 1000 }});
+	var qY = quiztime.getFullYear().toString();
+	var qM = (quiztime.getMonth() + 1 < 10 ? '0' + (quiztime.getMonth() + 1) : quiztime.getMonth() + 1).toString();
+	var qD = quiztime.getDate().toString();
+	var qh = quiztime.getHours().toString();
+	var qm = quiztime.getMinutes().toString();
+	var qs = quiztime.getSeconds().toString();
+
+	document.getElementById('quiztime').innerHTML = '测试完成时间: ' + qY + '-' + qM + '-' + qD + ' ' + qh + ':' + qm + ':' + qs;
+</script>
+{% endblock %}
