@@ -28,6 +28,8 @@ class User(UserMixin, db.Model):
     intr = db.Column(db.Text)
     prefix = db.Column(db.Boolean)
     avatar = db.Column(db.Text)
+    char_value = db.Column(db.Text)
+    char_res = db.Column(db.String(4))
 
 
     def __repr__(self):
@@ -92,7 +94,7 @@ class QuizQuestion(db.Model):
 
 
     def __repr__(self):
-        return '<Quiz heading: %r' % self.quizheading
+        return '<Quiz heading: %r>' % self.quizheading
 
 
 class QuizResult(db.Model):
@@ -107,4 +109,17 @@ class QuizResult(db.Model):
 
 
     def __repr__(self):
-        return '<%r in %r title: %r answer %r' % (self.quizee, self.projectname, self.quizheading, self.quizanswer)
+        return '<%r in %r title: %r answer %r>' % (self.quizee, self.projectname, self.quizheading, self.quizanswer)
+
+
+class QuizRef(db.Model):
+    """测试库到各指标的简单映射"""
+    __tablename__ = 'quizref'
+    refid = db.Column(db.Integer, primary_key=True)
+    projectname = db.Column(db.Text)
+    quizheading = db.Column(db.Text)
+    quizoption = db.Column(db.Text)
+    refvalue = db.Column(db.Text)
+
+    def __repr__(self):
+        return '<%r option: %r value: %r>' % (self.quizheading, self.quizoption, self.refvalue)

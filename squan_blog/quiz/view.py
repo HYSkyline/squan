@@ -6,7 +6,7 @@ from flask import render_template, session, redirect, url_for, current_app, requ
 from flask_login import login_user, logout_user, login_required, current_user
 from . import quiz
 from .. import db
-from ..models import User, QuizQuestion, QuizResult
+from ..models import User, QuizQuestion, QuizResult, QuizRef
 # from ..models import TextQuiz, GeoQuiz
 # from .form import TextQuizForm, GeoQuizForm
 
@@ -67,4 +67,60 @@ def quizchar_view(username):
 		quizee=username,
 		projectname='char'
 	).all()
+	quiz_ref = QuizRef.query.all()
+
+	quizchar_r_score = 0
+	quizchar_a_score = 0
+	quizchar_b_score = 0
+	quizchar_m_score = 0
+	quizchar_w_score = 0
+	quizchar_s_score = 0
+	quizchar_u_score = 0
+	quizchar_g_score = 0
+	for quizchar_i in range(len(quizchar_data)):
+		for ref_i in range(len(quiz_ref)):
+			if quizchar_data[quizchar_i].quizanswer == quiz_ref[ref_i].quizoption:
+				quizchar_r_add, quizchar_a_add, quizchar_b_add, quizchar_m_add, quizchar_w_add, quizchar_s_add, quizchar_u_add, quizchar_g_add = quiz_ref[ref_i].refvalue.split('||')
+				quizchar_r_score += int(quizchar_r_add)
+				quizchar_a_score += int(quizchar_a_add)
+				quizchar_b_score += int(quizchar_b_add)
+				quizchar_m_score += int(quizchar_m_add)
+				quizchar_w_score += int(quizchar_w_add)
+				quizchar_s_score += int(quizchar_s_add)
+				quizchar_u_score += int(quizchar_u_add)
+				quizchar_g_score += int(quizchar_g_add)
+	quizchar_result = '||'.join([
+		str(quizchar_r_score),
+		str(quizchar_a_score),
+		str(quizchar_b_score),
+		str(quizchar_m_score),
+		str(quizchar_w_score),
+		str(quizchar_s_score),
+		str(quizchar_u_score),
+		str(quizchar_g_score)
+	])
+	user.char_value = quizchar_result
+
+	quizchar_dic = {
+		'r': quizchar_r_score,
+		'a': quizchar_a_score,
+		'b': quizchar_b_score,
+		'm': quizchar_m_score,
+		'w': quizchar_w_score,
+		's': quizchar_s_score,
+		'u': quizchar_u_score,
+		'g': quizchar_g_score
+	}
+	quizchar_cal = sorted(quizchar_dic.items(), lambda x, y: cmp(x[1], y[1]), reverse=True)
+	if quizchar_cal[0][1] - quizchar_cal[1][1] < 3:
+		if quizchar_cal[1][1] - quizchar_cal[2][1] < 2:
+			if quizchar_cal[2][1] - quizchar_cal[3][1] < 1:
+				user.char_res = quizchar_cal[0][0] + quizchar_cal[1][0] + quizchar_cal[2][0] + quizchar_cal[3][0]
+			else:
+				user.char_res = quizchar_cal[0][0] + quizchar_cal[1][0] + quizchar_cal[2][0]
+		else:
+			user.char_res = quizchar_cal[0][0] + quizchar_cal[1][0]
+	else:
+		user.char_res = quizchar_cal[0][0]
+	db.session.commit()
 	return render_template('quiz/quizcharResult.html', user=current_user, chardata=quizchar_data)

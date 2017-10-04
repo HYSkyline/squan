@@ -36,17 +36,6 @@ def register():
 			username=form.username.data,
 			password=form.password.data
 		)
-		quiz = UserQuiz(
-			quizee = form.username.data,
-			r_score = 0,
-			a_score = 0,
-			b_score = 0,
-			m_score = 0,
-			w_score = 0,
-			s_score = 0,
-			u_score = 0,
-			g_score = 0
-		)
 		db.session.add(user)
 		db.session.add(quiz)
 		flash(u'注册程序完成，现可登录.')
@@ -58,12 +47,11 @@ def register():
 @login_required
 def userinfo(username):
 	user = User.query.filter_by(username=username).first()
-	user_quiz = UserQuiz.query.filter_by(quizee=username).first()
 	if user:
 		if user.username == current_user.username:
-			return render_template('auth/userview.html', user=user, quiz=user_quiz)
+			return render_template('auth/userview.html', user=user)
 		else:
-			return render_template('auth/userinfo.html', user=user, quiz=user_quiz)
+			return render_template('auth/userinfo.html', user=user)
 	else:
 		pass
 
@@ -72,7 +60,6 @@ def userinfo(username):
 @login_required
 def infoedit():
 	form = InfoEditForm()
-	user_quiz = UserQuiz.query.filter_by(quizee=current_user.username).first()
 	if form.validate_on_submit():
 		if request.files['avatarimg']:
 			avatar_name = request.files['avatarimg'].filename

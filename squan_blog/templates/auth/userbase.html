@@ -20,7 +20,7 @@
 					<div class="col-xs-9" id="nameInfo">
 						<div>
 							{% if user.prefix == True %}
-						    	<h2>[{{ quiz.quiz_rec }}]{{ user.username }}</h2>
+						    	<h2>[{{ user.char_res }}]{{ user.username }}</h2>
 						    {% else %}
 						    	<h2>{{ user.username }}</h2>
 						    {% endif %}
@@ -33,7 +33,7 @@
 					<div class="col-xs-12" id="nameInfo">
 						<div>
 							{% if user.prefix == True %}
-						    	<h2>[{{ quiz.quiz_rec }}]{{ user.username }}</h2>
+						    	<h2>[{{ user.char_res }}]{{ user.username }}</h2>
 						    {% else %}
 						    	<h2>{{ user.username }}</h2>
 						    {% endif %}
@@ -73,21 +73,27 @@
 </div>
 
 <script type="text/javascript">
+	var maxRange = 6;
+	if ('{{ user.char_value }}' !== '') {
+		var chardata_str = '{{ user.char_value }}'.split('||');
+		var chardata_int = [];
+		for (var i = 0; i < chardata_str.length; i++) {
+			chardata_int.push(parseInt(chardata_str[i]));
+			if (parseInt(chardata_str[i]) > maxRange) {
+				maxRange = parseInt(chardata_str[i]);
+			}
+		}
+	} else {
+		var chardata_int = [0,0,0,0,0,0,0,0]
+	}
+	
+
 	var myChart = echarts.init(
 		document.getElementById('quizChart'),
 		'macarons'
 	);
 	var dataQuiz = [
-	    [
-	    	{{ quiz.r_score }},
-	    	{{ quiz.a_score }},
-	    	{{ quiz.b_score }},
-	    	{{ quiz.m_score }},
-	    	{{ quiz.w_score }},
-	    	{{ quiz.s_score }},
-	    	{{ quiz.u_score }},
-	    	{{ quiz.g_score }},
-	    ]
+	    chardata_int
 	];
 
 	var lineStyle = {
@@ -104,14 +110,14 @@
 	    },
 	    radar: {
 	        indicator: [
-	            {name: 'R', max: 10},
-	            {name: 'A', max: 10},
-	            {name: 'B', max: 10},
-	            {name: 'M', max: 10},
-	            {name: 'W', max: 10},
-	            {name: 'S', max: 10},
-	            {name: 'U', max: 10},
-	            {name: 'G', max: 10},
+	            {name: 'R', max: maxRange},
+	            {name: 'A', max: maxRange},
+	            {name: 'B', max: maxRange},
+	            {name: 'M', max: maxRange},
+	            {name: 'W', max: maxRange},
+	            {name: 'S', max: maxRange},
+	            {name: 'U', max: maxRange},
+	            {name: 'G', max: maxRange},
 	        ],
 	        shape: 'circle',
 	        splitNumber: 7,

@@ -18,6 +18,9 @@
 	<p>------------------------------</p>
 {% endfor %}
 
+<p>计分结果: {{ user.char_value }}</p>
+<p>最终分类: [{{ user.char_res }}]</p>
+
 <script type="text/javascript">
 	var quiztime = new Date({{ chardata[chardata|count - 1].quiztime * 1000 }});
 	var qY = quiztime.getFullYear().toString();
