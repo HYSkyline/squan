@@ -1,0 +1,89 @@
+* {
+	cursor: url('../../img/mouse/Normal.cur'), crosshair;
+	font-family: 'STXiHei';
+}
+html {
+	padding: 0;
+}
+body {
+	background: transparent;
+	color: white;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+.row {
+	text-align: center;
+}
+hr {
+	margin-top: 6px;
+	margin-bottom: 12px;
+	border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+span {
+	font-size: 24px;
+}
+@media screen and (max-device-width: 760px) {
+	html {
+		background-image: url('../../img/userinfoBackground12.jpg');
+		background-repeat: repeat;
+	}
+	.container-fluid {
+		width: 90%;
+	}
+	#avatar {
+		width: 80%;
+		border-radius: 10px;
+	}
+}
+@media screen and (min-device-width: 761px) {
+	html {
+		background-image: url('../../img/userinfoBackground6.jpg');
+		background-repeat: repeat;
+	}
+	.container-fluid {
+		width: 80%;
+	}
+	#avatar {
+		width: 100%;
+		border-radius: 10px;
+		margin-bottom: 12px;
+	}
+}
+#quizChart {
+	width: 100%;
+	height: auto;
+	min-height: 640px;
+}
+blockquote {
+	padding-left: 12px;
+	margin-bottom: 12px;
+	text-align: left;
+	font-size: 16px;
+	border-left: 2px solid rgba(255, 255, 255, 0.6);
+}
+small {
+	font-size: 12px;
+}
+.charintr {
+	text-align: left;
+	font-size: 14px;
+	text-indent: 2em;
+	margin: 0 0 2px;
+	word-break: break-all;
+}
+.btn-default {
+	background: transparent;
+	color: white;
+	margin-left: 12px;
+	margin-right: 12px;
+	font-size: 14px;
+	cursor: url('../../img/mouse/Link.cur'), pointer;
+	border-color: rgba(255, 255, 255, 0.6);
+}
+.btn-default:hover {
+	background-color: transparent;
+	border-color: rgba(255, 255, 255, 0.9);
+	color: white;
+}

@@ -108,6 +108,7 @@ class InfoEditForm(FlaskForm):
 			"style": "background-color: transparent;"
 		}
 	)
+	userprefix = BooleanField(u'起用前缀')
 	submit = SubmitField(
 		u'确认',
 		render_kw={

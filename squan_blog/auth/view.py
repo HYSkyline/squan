@@ -67,6 +67,7 @@ def infoedit():
 			current_user.avatar = request.files['avatarimg'].filename
 		current_user.birthdate = form.birthdate.data
 		current_user.intr = form.intrtext.data
+		current_user.prefix = form.userprefix.data
 		db.session.add(current_user)
 		flash(u'信息更新完成')
 		return redirect(url_for('.userinfo', username=current_user.username))

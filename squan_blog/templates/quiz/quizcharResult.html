@@ -5,31 +5,177 @@
 {% block head %}
 {{ super() }}
 <script type="text/javascript" src="{{ url_for('static', filename='lib/js/echarts.min.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/css/quizchar_res.css') }}">
 {% endblock %}
 
 {% block page_content %}
-<h2>测试人:{{ current_user.username }}</h2>
-<p id="quiztime"></p>
-<p>------------------------------</p>
-
-{% for i in range(chardata|count) %}
-	<p>题目: {{ chardata[i].quizheading }}</p>
-	<p>选择: {{ chardata[i].quizanswer }}</p>
-	<p>------------------------------</p>
-{% endfor %}
-
-<p>计分结果: {{ user.char_value }}</p>
-<p>最终分类: [{{ user.char_res }}]</p>
-
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-4">
+			<img id="avatar" src="{{ url_for('static', filename='img/avatar/' + user.avatar) }}" class="img-rounded" alt="苏幕遮" />
+			<br />
+			<span id="charDivide"></span>
+			<span>{{ current_user.username }}</span>
+			<hr />
+			<div id="quote">
+				<blockquote>
+					{{ charquote.chardict[user.char_res[0]][0] }}
+					<small>
+						{{ charquote.chardict[user.char_res[0]][1] }}
+						<cite>
+							《{{ charquote.chardict[user.char_res[0]][2] }}》
+						</cite>
+					</small>
+				</blockquote>
+			</div>
+			<hr />
+			{% set intr = charquote.chardict[user.char_res[0]][3].split('checkparagraph') %}
+			{% for intr_i in range(intr|count) %}
+				<p class="charintr">{{ intr[intr_i] }}</p>
+			{% endfor %}
+		</div>
+		<div class="col-md-8">
+			{% block quiz_chart %}
+				<div class="article" id="quizChart">chart.</div>
+			{% endblock %}
+			<a href="{{ url_for('auth.userinfo', username = user.username) }}" class="btn btn-default" role="button">个人设置</a>
+			<a href="{{ url_for('main.home') }}" class="btn btn-default" role="button">退回主页</a>
+		</div>
+	</div>
+</div>
 <script type="text/javascript">
-	var quiztime = new Date({{ chardata[chardata|count - 1].quiztime * 1000 }});
-	var qY = quiztime.getFullYear().toString();
-	var qM = (quiztime.getMonth() + 1 < 10 ? '0' + (quiztime.getMonth() + 1) : quiztime.getMonth() + 1).toString();
-	var qD = quiztime.getDate().toString();
-	var qh = quiztime.getHours().toString();
-	var qm = quiztime.getMinutes().toString();
-	var qs = quiztime.getSeconds().toString();
+	function upDivide(char) {
+		var charUp = '';
+		for (var i = 0; i < char.length; i++) {
+			charUp += '[' + char[i] + ']';
+		}
+		return charUp;
+	}
+	document.getElementById('charDivide').innerHTML = upDivide('{{ user.char_res }}')
+</script>
+<script type="text/javascript">
+	function datetimeTransform(dateInt) {
+		var quiztime = new Date(dateInt * 1000);
+		var qY = quiztime.getFullYear().toString();
+		var qM = (quiztime.getMonth() + 1 < 10 ? '0' + (quiztime.getMonth() + 1) : quiztime.getMonth() + 1).toString();
+		var qD = (quiztime.getDate() < 10 ? '0' + quiztime.getDate() : quiztime.getDate()).toString();
+		var qh = (quiztime.getHours() < 10 ? '0' + quiztime.getHours() : quiztime.getHours()).toString();
+		var qm = (quiztime.getMinutes() < 10 ? '0' + quiztime.getMinutes() : quiztime.getMinutes()).toString();
+		var qs = (quiztime.getSeconds() < 10 ? '0' + quiztime.getSeconds() : quiztime.getSeconds()).toString();
+		var qtime = qY + '-' + qM + '-' + qD + ' ' + qh + ':' + qm + ':' + qs;
+		return qtime;
+	}
+</script>
+<script type="text/javascript">
+	var maxRange = 6;
+	if ('{{ user.char_value }}' !== '') {
+		var dataQuiz = [];
+		for (var time_i = 0; time_i < {{ chardata|count }}; time_i++) {
+			var chardata_str = {{ chardata }}[time_i][1];
+			var chardata_int = [];
+			for (var value_i = 0; value_i < chardata_str.length; value_i++) {
+				chardata_int.push(parseInt(chardata_str[value_i]));
+				if (parseInt(chardata_str[value_i]) > maxRange) {
+					maxRange = parseInt(chardata_str[value_i]);
+				}
+			}
+			dataQuiz.push(chardata_int);
+		}
+	} else {
+		var dataQuiz = [0,0,0,0,0,0,0,0];
+	}
+	
+	var myChart = echarts.init(
+		document.getElementById('quizChart'),
+		'macarons'
+	);
 
-	document.getElementById('quiztime').innerHTML = '测试完成时间: ' + qY + '-' + qM + '-' + qD + ' ' + qh + ':' + qm + ':' + qs;
+	var dataChart = [];
+	for (var data_i = 0; data_i < dataQuiz.length; data_i++) {
+		dataChart.push(
+			{
+				name: datetimeTransform({{ chardata }}[data_i][0]),
+				value: dataQuiz[data_i]
+			}
+		)
+	}
+
+	var lineStyle = {
+	    normal: {
+	        width: 1,
+	        opacity: 0.5
+	    }
+	};
+
+	option = {
+	    backgroundColor: 'rgba(0,0,0,0)',
+	    tooltip: {
+	    	trigger: 'axis'
+	    },
+	    radar: {
+	        indicator: [
+	            {name: 'R', max: maxRange},
+	            {name: 'A', max: maxRange},
+	            {name: 'B', max: maxRange},
+	            {name: 'M', max: maxRange},
+	            {name: 'W', max: maxRange},
+	            {name: 'S', max: maxRange},
+	            {name: 'U', max: maxRange},
+	            {name: 'G', max: maxRange},
+	        ],
+	        shape: 'circle',
+	        splitNumber: 7,
+	        name: {
+	            textStyle: {
+	                color: 'rgb(100, 100, 100)'
+	            }
+	        },
+	        splitLine: {
+	            lineStyle: {
+	                color: [
+	                    'rgba(200, 200, 200, 0.05)', 
+	                    'rgba(200, 200, 200, 0.10)',
+	                    'rgba(200, 200, 200, 0.15)', 
+	                    'rgba(200, 200, 200, 0.20)',
+	                    'rgba(200, 200, 200, 0.25)', 
+	                    'rgba(200, 200, 200, 0.30)',
+	                    'rgba(200, 200, 200, 0.35)', 
+	                    'rgba(200, 200, 200, 0.40)'
+	                ].reverse()
+	            }
+	        },
+	        splitArea: {
+	            show: false
+	        },
+	        axisLine: {
+	            lineStyle: {
+	                color: 'rgba(100, 100, 100, 0.5)'
+	            }
+	        }
+	    },
+	    series: [
+	        {
+	            name: '无聊测试',
+	            type: 'radar',
+	            tooltip: {
+                	trigger: 'item'
+            	},
+	            lineStyle: lineStyle,
+	            data: dataChart,
+	            symbol: 'none',
+	            itemStyle: {
+	                normal: {
+	                    color: 'rgba(255, 255, 255, 1)'
+	                }
+	            },
+	            areaStyle: {
+	                normal: {
+	                    opacity: 0.1
+	                }
+	            }
+	        }
+	    ]
+	};
+	myChart.setOption(option);
 </script>
 {% endblock %}

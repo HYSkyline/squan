@@ -42,7 +42,7 @@ body {
 		border-radius: 10px;
 	}
 	#avatarimgOrigin {
-		width: 50%;
+		width: 80%;
 	}
 }
 #contentFrame {
@@ -68,6 +68,15 @@ hr {
 }
 div#avatarPreview {
 	text-align: center;
+}
+.checkbox {
+	text-align: left;
+}
+.checkbox label {
+	cursor: url('../../img/mouse/Link.cur'), pointer;
+}
+.checkbox label input {
+	cursor: url('../../img/mouse/Link.cur'), pointer;
 }
 
 #avatarimgCommit {
@@ -132,4 +141,24 @@ a:visited {
 	color: white;
 	text-decoration: none;
 	cursor: url('../../img/mouse/Link.cur'), crosshair;
+}
+
+.col-md-4 {
+	padding: 0;
+}
+#submit-left {
+	padding-right: 10px;
+}
+#submit-center {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+#submit-right {
+	padding-left: 10px;
+}
+
+#quizChart {
+	width: 100%;
+	height: auto;
+	min-height: 300px;
 }

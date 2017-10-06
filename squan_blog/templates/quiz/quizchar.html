@@ -9,20 +9,28 @@
 {% block title %}{{ current_user.username }}·心の壁{% endblock %}
 
 {% block page_content %}
-<div id="quizContainer">
+<div id="quizContainer" class="container">
     <form id="quizForm" method="post">
 	{% for headingIndex in range(quiz|count) %}
 	<div class="section" onclick="nextView()">
-		<h3>
-			{{ quiz[headingIndex].quizheading }}
-		</h3>
+        <div class="row">
+            <div class="col-md-12">
+                <p id="{{ 'head' + headingIndex|string }}" class="heading">
+                    {{ quiz[headingIndex].quizheading }}
+                </p>
+            </div>
+        </div>
         <input type="text" name="{{ 'head' + headingIndex|string }}" value="{{ quiz[headingIndex].quizheading }}" />
 		{% set quizoptionList = quiz[headingIndex].quizoption.split('||') %}
-		{% for optionIndex in range(quizoptionList|count) %}
-			<p id="{{ 'head' + headingIndex|string + '-opt' + optionIndex|string }}" onclick="checkOption(this)">
-				{{ quizoptionList[optionIndex] }}
-			</p>
-		{% endfor %}
+        <div class="row">
+            <div class="col-md-12" id="options">
+    		{% for optionIndex in range(quizoptionList|count) %}
+                <span id="{{ 'head' + headingIndex|string + '-opt' + optionIndex|string }}" class="option" onclick="checkOption(this)">
+                    {{ quizoptionList[optionIndex] }}
+                </span>
+    		{% endfor %}
+            </div>
+        </div>
         <input class="quizAnswer" type="text" name="{{ 'head' + headingIndex|string + '-opt' }}" />
 	</div>
 	{% endfor %}
@@ -71,6 +79,12 @@
         if (inputComplete) {
             document.getElementById('quizForm').submit();
         }
+    }
+</script>
+<script type="text/javascript">
+    var answers = document.getElementsByClassName('quizAnswer');
+    for (var i = answers.length - 1; i >= 0; i--) {
+        answers[i].value = '';
     }
 </script>
 {% endblock %}

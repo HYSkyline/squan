@@ -123,3 +123,8 @@ class QuizRef(db.Model):
 
     def __repr__(self):
         return '<%r option: %r value: %r>' % (self.quizheading, self.quizoption, self.refvalue)
+
+
+class charQuote():
+    def __init__(self, char_dict):
+        self.chardict = char_dict

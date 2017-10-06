@@ -3,6 +3,7 @@
 
 {% block head %}
 {{ super() }}
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/echarts.min.js') }}"></script>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/css/infoedit.css') }}">
 {% endblock %}
 
@@ -16,27 +17,39 @@
 				<div class="row">
 					<div class="col-md-12" id="contentFrame">
 						{{ form.hidden_tag() }}
-						<h2>{{ user.username }}</h2>
-						<hr />
-						{{ wtf.form_field(form.avatarimg, style="height:0; display: none;") }}
-						<div id="avatarPreview"></div>
-						<div id="avatarLabel">
-							<label for="avatarimg">
-								<img id="avatarimgOrigin" src="{{ url_for('static', filename='img/avatar/' + user.avatar) }}" class="img-rounded" alt="上传头像" />
-							</label>
+						<div class="row">
+							<h2>{{ user.username }}</h2>
+							<hr />
 						</div>
-						{{ wtf.form_field(form.birthdate) }}
-						{{ wtf.form_field(form.intrtext) }}
+						<div class="row">
+							<div class="col-md-6">
+								{{ wtf.form_field(form.avatarimg, style="height:0; display: none;") }}
+								<div id="avatarPreview"></div>
+								<div id="avatarLabel">
+									<label for="avatarimg">
+										<img id="avatarimgOrigin" src="{{ url_for('static', filename='img/avatar/' + user.avatar) }}" class="img-rounded" alt="上传头像" />
+									</label>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="article" id="quizChart">chart.</div>
+							</div>
+						</div>
+						<div class="row">
+							{{ wtf.form_field(form.birthdate) }}
+							{{ wtf.form_field(form.intrtext) }}
+							{{ wtf.form_field(form.userprefix) }}
+						</div>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-4">
+					<div class="col-md-4" id="submit-left">
 						{{ wtf.form_field(form.submit) }}
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-4" id="submit-center">
 						<a href="{{ url_for('.infoedit', username=current_user.username) }}" class="actionBtn">重置</a>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-4" id="submit-right">
 						<a href="{{ url_for('.userinfo', username=current_user.username) }}" class="actionBtn">回退</a>
 					</div>
 				</div>
@@ -46,12 +59,124 @@
 </div>
 <script type="text/javascript">
 	function reset() {
-		console.log('reset')
-		document.getElementById('birthdate').value = {{ current_user.birthdate }};
-		document.getElementById('intrtext').innerHTML = "{{ current_user.intr }}";
-
+		document.getElementById('birthdate').value = '{{ current_user.birthdate }}';
+		console.log('prefix check.')
+		if ('{{ current_user.prefix }}' == 'True') {
+			console.log('prefix checked.')
+			document.getElementById('userprefix').checked = true;
+		}
 		document.getElementById('avatarimg').value = null;
+		document.getElementById('intrtext').innerHTML = "{{ current_user.intr }}";
 	}
+	window.onload = reset();
 </script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/js/infoedit.js') }}"></script>
+
+<script type="text/javascript">
+	var maxRange = 6;
+	if ('{{ user.char_value }}' !== '') {
+		var chardata_str = '{{ user.char_value }}'.split('||');
+		var chardata_int = [];
+		for (var i = 0; i < chardata_str.length; i++) {
+			chardata_int.push(parseInt(chardata_str[i]));
+			if (parseInt(chardata_str[i]) > maxRange) {
+				maxRange = parseInt(chardata_str[i]);
+			}
+		}
+	} else {
+		var chardata_int = [0,0,0,0,0,0,0,0]
+	}
+	
+
+	var myChart = echarts.init(
+		document.getElementById('quizChart'),
+		'macarons'
+	);
+	var dataQuiz = [
+	    chardata_int
+	];
+
+	var lineStyle = {
+	    normal: {
+	        width: 1,
+	        opacity: 0.5
+	    }
+	};
+
+	option = {
+	    backgroundColor: 'rgba(0,0,0,0)',
+	    tooltip: {
+	    	trigger: 'axis'
+	    },
+	    radar: {
+	        indicator: [
+	            {name: 'R', max: maxRange},
+	            {name: 'A', max: maxRange},
+	            {name: 'B', max: maxRange},
+	            {name: 'M', max: maxRange},
+	            {name: 'W', max: maxRange},
+	            {name: 'S', max: maxRange},
+	            {name: 'U', max: maxRange},
+	            {name: 'G', max: maxRange},
+	        ],
+	        shape: 'circle',
+	        splitNumber: 7,
+	        name: {
+	            textStyle: {
+	                color: 'rgb(100, 100, 100)'
+	            }
+	        },
+	        splitLine: {
+	            lineStyle: {
+	                color: [
+	                    'rgba(200, 200, 200, 0.05)', 
+	                    'rgba(200, 200, 200, 0.10)',
+	                    'rgba(200, 200, 200, 0.15)', 
+	                    'rgba(200, 200, 200, 0.20)',
+	                    'rgba(200, 200, 200, 0.25)', 
+	                    'rgba(200, 200, 200, 0.30)',
+	                    'rgba(200, 200, 200, 0.35)', 
+	                    'rgba(200, 200, 200, 0.40)'
+	                ].reverse()
+	            }
+	        },
+	        splitArea: {
+	            show: false
+	        },
+	        axisLine: {
+	            lineStyle: {
+	                color: 'rgba(100, 100, 100, 0.5)'
+	            }
+	        }
+	    },
+	    series: [
+	        {
+	            name: '无聊测试',
+	            type: 'radar',
+	            tooltip: {
+                	trigger: 'item'
+            	},
+	            lineStyle: lineStyle,
+	            data: dataQuiz,
+	            symbol: 'none',
+	            itemStyle: {
+	                normal: {
+	                    color: 'rgba(255, 255, 255, 1)'
+	                }
+	            },
+	            areaStyle: {
+	                normal: {
+	                    opacity: 0.1
+	                }
+	            }
+	        }
+	    ]
+	};
+	myChart.setOption(option);
+</script>
+<script type="text/javascript">
+	document.getElementById('quizChart').onclick = function () {
+		window.location.href="{{ url_for('quiz.quizID', username=current_user.username, projectname='char') }}";
+	}
+</script>
 {% endblock %}
