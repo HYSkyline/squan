@@ -10,14 +10,13 @@
 
 {% block page_content %}
 <div class="container-fluid">
-	<div class="row">
-		<div class="col-md-4">
-			<img id="avatar" src="{{ url_for('static', filename='img/avatar/' + user.avatar) }}" class="img-rounded" alt="苏幕遮" />
-			<br />
-			<span id="charDivide"></span>
-			<span>{{ current_user.username }}</span>
-			<hr />
+	<div id="statuRow" class="row">
+		<div id="statuCol" class="col-md-4">
 			<div id="quote">
+				<img id="avatar" src="{{ url_for('static', filename='img/avatar/' + user.avatar) }}" class="img-rounded" alt="苏幕遮" />
+				<span id="charDivide"></span>
+				<span>{{ current_user.username }}</span>
+				<hr />
 				<blockquote>
 					{{ charquote.chardict[user.char_res[0]][0] }}
 					<small>
@@ -27,20 +26,26 @@
 						</cite>
 					</small>
 				</blockquote>
+				<hr />
 			</div>
-			<hr />
 			{% set intr = charquote.chardict[user.char_res[0]][3].split('checkparagraph') %}
-			{% for intr_i in range(intr|count) %}
-				<p class="charintr">{{ intr[intr_i] }}</p>
-			{% endfor %}
+			<div id="quoteDiv">
+				{% for intr_i in range(intr|count) %}
+					<p class="charintr">{{ intr[intr_i] }}</p>
+				{% endfor %}
+			</div>
 		</div>
 		<div class="col-md-8">
 			{% block quiz_chart %}
 				<div class="article" id="quizChart">chart.</div>
 			{% endblock %}
-			<a href="{{ url_for('auth.userinfo', username = user.username) }}" class="btn btn-default" role="button">个人设置</a>
-			<a href="{{ url_for('main.home') }}" class="btn btn-default" role="button">退回主页</a>
+			
 		</div>
+	</div>
+	<hr />
+	<div id="actionRow" class="row">
+		<a class="buttonBack" id="buttonLeft" href="{{ url_for('main.home') }}"><span class="glyphicon glyphicon glyphicon-menu-left" aria-hidden="true"></span>退回主页</a>
+		<a class="buttonBack" id="buttonRight" href="{{ url_for('auth.userinfo', username = user.username) }}">个人设置<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></a>
 	</div>
 </div>
 <script type="text/javascript">
@@ -127,7 +132,7 @@
 	        splitNumber: 7,
 	        name: {
 	            textStyle: {
-	                color: 'rgb(100, 100, 100)'
+	                color: 'rgba(255, 255, 255, 0.8)'
 	            }
 	        },
 	        splitLine: {
@@ -140,7 +145,7 @@
 	                    'rgba(200, 200, 200, 0.25)', 
 	                    'rgba(200, 200, 200, 0.30)',
 	                    'rgba(200, 200, 200, 0.35)', 
-	                    'rgba(200, 200, 200, 0.40)'
+	                    'rgba(200, 200, 200, 0.02)'
 	                ].reverse()
 	            }
 	        },
@@ -158,14 +163,19 @@
 	            name: '无聊测试',
 	            type: 'radar',
 	            tooltip: {
-                	trigger: 'item'
+                	trigger: 'item',
+                	textStyle: {
+                		align: 'left'
+                	}
             	},
 	            lineStyle: lineStyle,
 	            data: dataChart,
 	            symbol: 'none',
-	            itemStyle: {
-	                normal: {
-	                    color: 'rgba(255, 255, 255, 1)'
+	            itemStyle: 
+	            {
+	                normal: 
+	                {
+	                    color: 'rgba(255, 255, 255, 1)',
 	                }
 	            },
 	            areaStyle: {

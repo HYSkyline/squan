@@ -136,7 +136,7 @@
 	                    'rgba(200, 200, 200, 0.25)', 
 	                    'rgba(200, 200, 200, 0.30)',
 	                    'rgba(200, 200, 200, 0.35)', 
-	                    'rgba(200, 200, 200, 0.40)'
+	                    'rgba(200, 200, 200, 0.02)'
 	                ].reverse()
 	            }
 	        },
@@ -175,8 +175,14 @@
 	myChart.setOption(option);
 </script>
 <script type="text/javascript">
-	document.getElementById('quizChart').onclick = function () {
-		window.location.href="{{ url_for('quiz.quizchar_view', username=current_user.username) }}";
+	if ('{{ user.char_value }}' !== 'None') {
+		document.getElementById('quizChart').onclick = function () {
+			window.location.href="{{ url_for('quiz.quizchar_view', username=current_user.username) }}";
+		}
+	} else {
+		document.getElementById('quizChart').onclick = function () {
+			window.location.href="{{ url_for('quiz.quizID', username=current_user.username, projectname='char') }}";
+		}
 	}
 </script>
 {% endblock %}
