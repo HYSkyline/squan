@@ -2,7 +2,7 @@
 
 import os
 
-f = open('config.txt', 'r')
+f = open('config.config', 'r')
 content = f.readlines()
 f.close()
 

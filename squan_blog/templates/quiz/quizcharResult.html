@@ -5,7 +5,9 @@
 {% block head %}
 {{ super() }}
 <script type="text/javascript" src="{{ url_for('static', filename='lib/js/echarts.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/optiscroll.min.js') }}"></script>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/css/quizchar_res.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/css/optiscroll.css') }}">
 {% endblock %}
 
 {% block page_content %}
@@ -29,13 +31,13 @@
 				<hr />
 			</div>
 			{% set intr = charquote.chardict[user.char_res[0]][3].split('checkparagraph') %}
-			<div id="quoteDiv">
+			<div id="quoteDiv" class="optiscroll">
 				{% for intr_i in range(intr|count) %}
 					<p class="charintr">{{ intr[intr_i] }}</p>
 				{% endfor %}
 			</div>
 		</div>
-		<div class="col-md-8">
+		<div id="chartDiv" class="col-md-8">
 			{% block quiz_chart %}
 				<div class="article" id="quizChart">chart.</div>
 			{% endblock %}
@@ -48,29 +50,8 @@
 		<a class="buttonBack" id="buttonRight" href="{{ url_for('auth.userinfo', username = user.username) }}">个人设置<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></a>
 	</div>
 </div>
-<script type="text/javascript">
-	function upDivide(char) {
-		var charUp = '';
-		for (var i = 0; i < char.length; i++) {
-			charUp += '[' + char[i] + ']';
-		}
-		return charUp;
-	}
-	document.getElementById('charDivide').innerHTML = upDivide('{{ user.char_res }}')
-</script>
-<script type="text/javascript">
-	function datetimeTransform(dateInt) {
-		var quiztime = new Date(dateInt * 1000);
-		var qY = quiztime.getFullYear().toString();
-		var qM = (quiztime.getMonth() + 1 < 10 ? '0' + (quiztime.getMonth() + 1) : quiztime.getMonth() + 1).toString();
-		var qD = (quiztime.getDate() < 10 ? '0' + quiztime.getDate() : quiztime.getDate()).toString();
-		var qh = (quiztime.getHours() < 10 ? '0' + quiztime.getHours() : quiztime.getHours()).toString();
-		var qm = (quiztime.getMinutes() < 10 ? '0' + quiztime.getMinutes() : quiztime.getMinutes()).toString();
-		var qs = (quiztime.getSeconds() < 10 ? '0' + quiztime.getSeconds() : quiztime.getSeconds()).toString();
-		var qtime = qY + '-' + qM + '-' + qD + ' ' + qh + ':' + qm + ':' + qs;
-		return qtime;
-	}
-</script>
+
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/quizchar_res.js') }}"></script>
 <script type="text/javascript">
 	var maxRange = 6;
 	if ('{{ user.char_value }}' !== '') {

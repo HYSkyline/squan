@@ -1,6 +1,7 @@
 * {
 	cursor: url('../../img/mouse/Normal.cur'), crosshair;
 	font-family: 'STXiHei';
+	user-select: none;
 }
 html {
 	padding: 0;
@@ -67,16 +68,15 @@ span {
 	#statuCol {
 		height: 100%;
 	}
-	#quote {
-		height: 78%;
-	}
-	#quoteDiv {
-		height: 21%;
-		overflow-y: auto;
+	#chartDiv {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		text-align: center;
 	}
 }
 #quizChart {
-	width: 100%;
 	height: auto;
 	min-height: 600px;
 }

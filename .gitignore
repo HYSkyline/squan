@@ -18,8 +18,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # Windows config
-*.txt
-*.bak
+*.config
 .idea/
 
 # Python
