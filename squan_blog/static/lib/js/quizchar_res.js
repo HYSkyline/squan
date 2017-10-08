@@ -1,7 +1,9 @@
 var statuRowHeight = document.getElementById('statuRow').offsetHeight;
+console.log(statuRowHeight);
 var quoteHeight = document.getElementById('quote').offsetHeight;
+console.log(quoteHeight);
 var quoteDivElement = document.getElementById('quoteDiv');
-quoteDivElement.style.height = statuRowHeight - quoteHeight - 55 + 'px';
+quoteDivElement.style.height = statuRowHeight - quoteHeight - 25 + 'px';
 var quoteDivOptiscroll = new Optiscroll(quoteDivElement);
 
 var chartDivHeight = document.getElementById('chartDiv').offsetHeight;
@@ -13,9 +15,8 @@ function upDivide(char) {
 	for (var i = 0; i < char.length; i++) {
 		charUp += '[' + char[i] + ']';
 	}
-	return charUp;
+	document.getElementById('charDivide').innerHTML = charUp;
 }
-document.getElementById('charDivide').innerHTML = upDivide('{{ user.char_res }}')
 
 function datetimeTransform(dateInt) {
 	var quiztime = new Date(dateInt * 1000);

@@ -52,6 +52,7 @@
 </div>
 
 <script type="text/javascript" src="{{ url_for('static', filename='lib/js/quizchar_res.js') }}"></script>
+
 <script type="text/javascript">
 	var maxRange = 6;
 	if ('{{ user.char_value }}' !== '') {
@@ -168,5 +169,8 @@
 	    ]
 	};
 	myChart.setOption(option);
+</script>
+<script type="text/javascript">
+	upDivide("{{ user.char_res }}");
 </script>
 {% endblock %}
