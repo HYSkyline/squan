@@ -60,9 +60,7 @@
 <script type="text/javascript">
 	function reset() {
 		document.getElementById('birthdate').value = '{{ current_user.birthdate }}';
-		console.log('prefix check.')
 		if ('{{ current_user.prefix }}' == 'True') {
-			console.log('prefix checked.')
 			document.getElementById('userprefix').checked = true;
 		}
 		document.getElementById('avatarimg').value = null;
@@ -71,7 +69,11 @@
 	window.onload = reset();
 </script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/js/infoedit.js') }}"></script>
-
+<script type="text/javascript">
+	var chartDiv = document.getElementById('quizChart');
+	var avatarLabelDiv = document.getElementById('avatarLabel');
+	chartDiv.style.minHeight = avatarLabel.clientHeight + 24 + 'px';
+</script>
 <script type="text/javascript">
 	var maxRange = 6;
 	if ('{{ user.char_value }}' !== '') {
@@ -178,5 +180,6 @@
 	document.getElementById('quizChart').onclick = function () {
 		window.location.href="{{ url_for('quiz.quizID', username=current_user.username, projectname='char') }}";
 	}
+	// window.location.reload(true);
 </script>
 {% endblock %}

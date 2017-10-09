@@ -13,7 +13,7 @@ body {
 	padding-left: 5px;
 	padding-right: 5px;
 }
-@media screen and (max-device-width: 760px) {
+@media screen and (max-device-width: 767px) {
 	html {
 		background-image: url('../../img/userinfoBackground12.jpg');
 		background-repeat: repeat;
@@ -28,8 +28,14 @@ body {
 	#avatarimgOrigin {
 		width: 80%;
 	}
+	#submit {
+		margin-top: 0px;
+	}
+	.actionBtn {
+		margin-top: 0px;
+	}
 }
-@media screen and (min-device-width: 761px) {
+@media screen and (min-device-width: 768px) {
 	html {
 		background-image: url('../../img/userinfoBackground6.jpg');
 		background-repeat: repeat;
@@ -43,6 +49,19 @@ body {
 	}
 	#avatarimgOrigin {
 		width: 80%;
+	}
+	#submit-left {
+		padding-right: 10px;
+	}
+	#submit-center {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+	#submit-right {
+		padding-left: 10px;
+	}
+	.actionBtn {
+		margin-top: 20px;
 	}
 }
 #contentFrame {
@@ -116,7 +135,7 @@ input#submit {
 	user-select: none;
 	border: 1px solid #ccc;
 	border-radius: 4px;
-	margin-top: 20px;
+	
 	box-sizing: border-box;
 	align-items: flex-start;
 }
@@ -146,19 +165,7 @@ a:visited {
 .col-md-4 {
 	padding: 0;
 }
-#submit-left {
-	padding-right: 10px;
-}
-#submit-center {
-	padding-left: 10px;
-	padding-right: 10px;
-}
-#submit-right {
-	padding-left: 10px;
-}
-
 #quizChart {
 	width: 100%;
 	height: auto;
-	min-height: 300px;
 }

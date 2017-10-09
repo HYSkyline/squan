@@ -15,9 +15,13 @@
 	<div id="statuRow" class="row">
 		<div id="statuCol" class="col-md-4">
 			<div id="quote">
-				<img id="avatar" src="{{ url_for('static', filename='img/avatar/' + user.avatar) }}" class="img-rounded" alt="苏幕遮" />
-				<span id="charDivide"></span>
-				<span>{{ current_user.username }}</span>
+				<div>
+					<img id="avatar" src="{{ url_for('static', filename='img/avatar/' + user.avatar) }}" class="img-rounded" alt="苏幕遮" />
+				</div>
+				<div>
+					<span id="charDivide"></span>
+					<span>{{ current_user.username }}</span>
+				</div>
 				<hr />
 				<blockquote>
 					{{ charquote.chardict[user.char_res[0]][0] }}
@@ -172,5 +176,6 @@
 </script>
 <script type="text/javascript">
 	upDivide("{{ user.char_res }}");
+    // window.location.reload(true);
 </script>
 {% endblock %}

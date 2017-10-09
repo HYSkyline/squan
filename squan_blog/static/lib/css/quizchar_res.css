@@ -5,7 +5,7 @@
 }
 html {
 	padding: 0;
-	height: 100%;
+	
 	width: 100%;
 }
 body {
@@ -37,7 +37,7 @@ hr {
 span {
 	font-size: 24px;
 }
-@media screen and (max-device-width: 760px) {
+@media screen and (max-device-width: 767px) {
 	html {
 		background-image: url('../../img/userinfoBackground12.jpg');
 		background-repeat: repeat;
@@ -50,11 +50,15 @@ span {
 		width: 80%;
 		border-radius: 10px;
 	}
+	#quizChart {
+		min-height: 420px;
+	}
 }
-@media screen and (min-device-width: 761px) {
+@media screen and (min-device-width: 768px) {
 	html {
 		background-image: url('../../img/userinfoBackground6.jpg');
 		background-repeat: repeat;
+		height: 100%;
 	}
 	.container-fluid {
 		width: 80%;
@@ -75,10 +79,12 @@ span {
 		justify-content: center;
 		text-align: center;
 	}
+	#quizChart {
+		min-height: 600px;
+	}
 }
 #quizChart {
 	height: auto;
-	min-height: 600px;
 }
 blockquote {
 	padding-left: 12px;

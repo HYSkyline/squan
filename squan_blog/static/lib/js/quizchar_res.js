@@ -1,14 +1,18 @@
-var statuRowHeight = document.getElementById('statuRow').offsetHeight;
-console.log(statuRowHeight);
-var quoteHeight = document.getElementById('quote').offsetHeight;
-console.log(quoteHeight);
-var quoteDivElement = document.getElementById('quoteDiv');
-quoteDivElement.style.height = statuRowHeight - quoteHeight - 25 + 'px';
-var quoteDivOptiscroll = new Optiscroll(quoteDivElement);
+if (window.screen.width > 767) {
+	var statuRowHeight = document.getElementById('statuRow').offsetHeight;
+	var quoteHeight = document.getElementById('quote').offsetHeight;
+	var quoteDivElement = document.getElementById('quoteDiv');
+	quoteDivElement.style.height = statuRowHeight - quoteHeight - 25 + 'px';
+	var quoteDivOptiscroll = new Optiscroll(quoteDivElement);
 
-var chartDivHeight = document.getElementById('chartDiv').offsetHeight;
-var chartDivElement = document.getElementById('quizChart');
-chartDivElement.style.minHeight = chartDivHeight + 'px';
+	var chartDivHeight = document.getElementById('chartDiv').offsetHeight;
+	var chartDivElement = document.getElementById('quizChart');
+	chartDivElement.style.minHeight = chartDivHeight + 'px';
+} else {
+	var screenWidth = window.screen.width;
+	var chartDivElement = document.getElementById('quizChart');
+	chartDivElement.style.minHeight = screenWidth*0.8 + 'px';
+}
 
 function upDivide(char) {
 	var charUp = '';
