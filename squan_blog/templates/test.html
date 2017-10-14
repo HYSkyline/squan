@@ -2,9 +2,40 @@
 
 {% block head %}
 {{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/css/test.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='lib/css/leaflet.css') }}" >
+<script type="application/javascript" src="{{ url_for('static', filename='lib/js/leaflet.js') }}"></script>
 {% endblock %}
 {% block title %}双犬·抚剑{% endblock %}
 
 {% block page_content %}
-{{ super() }}
+<!-- <p>geo_content: </p>
+<p>
+	{{ geo_res[0] }}
+</p> -->
+
+
+
+
+<div id="map"></div>
+<script>
+    var map = L.map('map').setView([31.2358296784,121.4659482490], 13);
+    var tdtBase = L.layerGroup([L.tileLayer('http://tile-{s}.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+        attribution: ''
+    })]);
+    var tddBase = L.layerGroup([L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: ''
+    })]);
+    var mapBase = {
+        "生态地图": tdtBase,
+        "正常底图": tddBase
+    };
+    map.addLayer(tdtBase);
+    L.control.layers(mapBase).addTo(map);
+
+	// L.marker([31.2358296784, 121.4659482490]).addTo(map);
+	{% for pt in geo_res[0] %}
+		L.marker([{{ pt[1] }}, {{ pt[0] }}]).addTo(map);
+	{% endfor %}
+</script>
 {% endblock %}

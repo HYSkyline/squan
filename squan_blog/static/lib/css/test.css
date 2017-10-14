@@ -1,0 +1,13 @@
+* {
+	color: white;
+}
+html, body {
+	padding: 0;
+	height: 100%;
+	width: 100%;
+	background-color: black;
+}
+#map {
+	height: 100%;
+	width: 100%;
+}

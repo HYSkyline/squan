@@ -1,9 +1,12 @@
 # -*- coding:utf-8 -*-
 
+from sqlalchemy.ext.declarative import declarative_base
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from . import db, login_manager
-from geoalchemy2 import Geometry
+from geoalchemy2 import Geography
+
+GeoBase = declarative_base()
 
 
 class Role(db.Model):
@@ -128,3 +131,10 @@ class QuizRef(db.Model):
 class charQuote():
     def __init__(self, char_dict):
         self.chardict = char_dict
+
+
+class Geopoint_test(db.Model):
+    """docstring for Geopoint_test"""
+    __tablename__ = 'pointtest'
+    gid = db.Column(db.Integer, primary_key=True)
+    geote = db.Column(Geography(geometry_type='MULTIPOINT', srid=4326))

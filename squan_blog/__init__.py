@@ -3,6 +3,7 @@ from flask_bootstrap import Bootstrap
 from flask_mail import Mail
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
 from flask_login import LoginManager
 from config import config
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
@@ -11,6 +12,7 @@ bootstrap = Bootstrap()
 mail = Mail()
 moment = Moment()
 db = SQLAlchemy()
+geo_engine = create_engine('postgresql://postgres:625383@localhost/squan_blog', echo=True)
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
@@ -26,6 +28,7 @@ def create_app(config_name='default'):
     mail.init_app(app)
     moment.init_app(app)
     db.init_app(app)
+
     login_manager.init_app(app)
 
     from .main import main as main_blueprint
