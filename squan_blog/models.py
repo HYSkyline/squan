@@ -133,8 +133,31 @@ class charQuote():
         self.chardict = char_dict
 
 
-class Geopoint_test(db.Model):
-    """docstring for Geopoint_test"""
-    __tablename__ = 'pointtest'
-    gid = db.Column(db.Integer, primary_key=True)
-    geote = db.Column(Geography(geometry_type='MULTIPOINT', srid=4326))
+class Geopoint(db.Model):
+    """点类地理数据"""
+    __tablename__ = 'geo_point'
+    ptid = db.Column(db.Integer, primary_key=True)
+    projectname = db.Column(db.Text)
+    quizee = db.Column(db.String(32))
+    quiztime = db.Column(db.Numeric)
+    geopt = db.Column(Geography(geometry_type='POINT', srid=4326))
+
+
+class Geopolyline(db.Model):
+    """线类地理数据"""
+    __tablename__ = 'geo_polyline'
+    plid = db.Column(db.Integer, primary_key=True)
+    projectname = db.Column(db.Text)
+    quizee = db.Column(db.String(32))
+    quiztime = db.Column(db.Numeric)
+    geopl = db.Column(Geography(geometry_type='LINESTRING', srid=4326))
+
+
+class Geopolygon(db.Model):
+    """面类地理数据"""
+    __tablename__ = 'geo_polygon'
+    pgid = db.Column(db.Integer, primary_key=True)
+    projectname = db.Column(db.Text)
+    quizee = db.Column(db.String(32))
+    quiztime = db.Column(db.Numeric)
+    geopg = db.Column(Geography(geometry_type='MULTIPOLYGON', srid=4326))

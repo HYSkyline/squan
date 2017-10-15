@@ -35,10 +35,12 @@ def create_app(config_name='default'):
     from .auth import auth as auth_blueprint
     from .api import api as api_blueprint
     from .quiz import quiz as quiz_blueprint
+    from .geo import geo as geo_blueprint
     app.register_blueprint(main_blueprint)
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
     app.register_blueprint(api_blueprint, url_prefix='/api')
     app.register_blueprint(quiz_blueprint, url_prefix='/quiz')
+    app.register_blueprint(geo_blueprint, url_prefix='/geo')
 
     configure_uploads(app, avatars)
     patch_request_class(app, 4194304)
