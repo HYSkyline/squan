@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block head %}
+{{ super() }}
+<script type="application/javascript" src="{{ url_for('static', filename='lib/js/leaflet.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/css/leaflet.css') }}">
+
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/Leaflet.draw.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/Leaflet.Draw.Event.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='lib/css/leaflet.draw.css') }}" />
+
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/Toolbar.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/Tooltip.js') }}"></script>
+
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/ext/GeometryUtil.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/ext/LatLngUtil.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/ext/LineUtil.Intersect.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/ext/Polygon.Intersect.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/ext/Polyline.Intersect.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/ext/TouchEvents.js') }}"></script>
+
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/draw/DrawToolbar.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/draw/handler/Draw.Feature.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/draw/handler/Draw.SimpleShape.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/draw/handler/Draw.Polyline.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/draw/handler/Draw.Marker.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/draw/handler/Draw.CircleMarker.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/draw/handler/Draw.Circle.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/draw/handler/Draw.Polygon.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/draw/handler/Draw.Rectangle.js') }}"></script>
+
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/edit/EditToolbar.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/edit/handler/EditToolbar.Edit.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/edit/handler/EditToolbar.Delete.js') }}"></script>
+
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/Control.Draw.js') }}"></script>
+
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/edit/handler/Edit.Poly.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/edit/handler/Edit.SimpleShape.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/edit/handler/Edit.Marker.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/edit/handler/Edit.CircleMarker.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/edit/handler/Edit.Circle.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/edit/handler/Edit.Rectangle.js') }}"></script>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='lib/css/geoedit.css') }}">
+{% endblock %}
+{% block title %}双犬·尺规{% endblock %}
+
+
+{% block page_content %}
+<div id="map"></div>
+<form id="geoForm" method="post" target="geoCommitFrame" style="display: block;">
+	<input type="text" name="geoType" value="" />
+	<input type="text" name="geoCoordinate" value="" />
+	<input id="geoCommit" type="submit" />
+</form>
+<iframe name="geoCommitFrame" style="display: none;"></iframe>
+<script>
+	var geoForm = document.getElementById('geoForm');
+	var geoType = document.getElementsByName('geoType')[0];
+	var geoCoordinate = document.getElementsByName('geoCoordinate')[0];
+	var geoCommit = document.getElementById('geoCommit');
+
+    var map = L.map('map').setView([30.24105142736931, 120.14077259673466], 12);
+    var streetMap = L.layerGroup([L.tileLayer('http://tile-{s}.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    })]);
+    var satelliteMap = L.layerGroup([L.tileLayer('http://www.google.cn/maps/vt?lyrs=s@189&x={x}&y={y}&z={z}', {
+        attribution: 'Map data &copy; 2015 <a href="https://www.google.com/permissions/geoguidelines.html">Google</a>'
+    })]);
+    var mapBase = {
+        '矢量地图': streetMap,
+        '卫星影像': satelliteMap
+    };
+    map.addLayer(streetMap);
+    drawnItems = L.featureGroup().addTo(map);
+
+    L.control.layers(
+    	{
+	        '矢量地图': streetMap,
+	        '卫星影像': satelliteMap
+	    },
+	    {
+	    	'绘制图层': drawnItems
+	    },
+	    {
+	    	position: 'topright',
+	    	collapsed: true
+	    }
+    ).addTo(map);
+
+    // 添加编辑条
+    map.addControl(new L.Control.Draw({
+    	draw: {
+    		circlemarker: false,
+    		rectangle: false,
+    		circle: false,
+            polygon: {
+                allowIntersection: false,
+                showArea: true
+            }
+        },
+        edit: {
+            featureGroup: drawnItems,
+            poly: {
+                allowIntersection : false
+            }
+        }
+    }));
+
+    // 生成len位小数的数值
+    var _round = function(num, len) {
+        return Math.round(num*(Math.pow(10, len)))/(Math.pow(10, len));
+    };
+    // latlng对象格式化函数(x.xxxxxx, y.yyyyyy)
+    var strLatLng = function(latlng) {
+        return "("+_round(latlng.lat, 6)+", "+_round(latlng.lng, 6)+")";
+    };
+
+    // 创建要素
+    map.on(L.Draw.Event.CREATED, function(event) {
+        var layer = event.layer;
+        var content = getPopupContent(layer);
+        if (content !== null) {
+            layer.bindPopup(content);
+        }
+        if (event.layerType == 'marker') {
+        	geoType.value = 'POINT';
+        	var ptLatLng = layer.getLatLng();
+        	geoCoordinate.value = [ptLatLng['lng'] + ' ' + ptLatLng['lat']];
+        } else if (event.layerType == 'polyline') {
+        	geoType.value = 'LINESTRING';
+        	var plLatLngs = layer.getLatLngs();
+        	var pl_points = [];
+        	for (var i = 0; i < plLatLngs.length; i++) {
+        		pl_points.push([plLatLngs[i]['lng'] + ' ' + plLatLngs[i]['lat']]);
+        	}
+        	geoCoordinate.value = pl_points;
+        } else if (event.layerType == 'polygon') {
+        	geoType.value = 'POLYGON';
+        	var pgLatLngs = layer.getLatLngs()[0];
+        	var pg_points = [];
+        	console.log(pgLatLngs);
+        	for (var i = 0; i < pgLatLngs.length; i++) {
+        		pg_points.push([pgLatLngs[i]['lng'] + ' ' + pgLatLngs[i]['lat']]);
+        	}
+        	pg_points.push([pgLatLngs[0]['lng'] + ' ' + pgLatLngs[0]['lat']])
+        	geoCoordinate.value = pg_points;
+        }
+        // console.log(geoType.value);
+        // console.log(geoCoordinate.value);
+        geoForm.submit();
+        drawnItems.addLayer(layer);
+    });
+
+    // 要素编辑
+    map.on(L.Draw.Event.EDITED, function(event) {
+        var layers = event.layers,
+            content = null;
+        layers.eachLayer(function(layer) {
+            content = getPopupContent(layer);
+            if (content !== null) {
+                layer.setPopupContent(content);
+            }
+        });
+    });
+
+    // 按照绘制要素类型生成提示信息(html格式)
+    var getPopupContent = function(layer) {
+        if (layer instanceof L.Marker) {
+        	// 如果是点要素则返回坐标值
+        	// console.log(layer.getLatLng());
+            return strLatLng(layer.getLatLng());
+        } else if (layer instanceof L.Circle) {
+        	// 如果是圆要素则返回圆心与半径
+            var center = layer.getLatLng(),
+                radius = layer.getRadius();
+            // console.log(center);
+            return "Center: "+strLatLng(center)+"<br />"
+                  +"Radius: "+_round(radius, 2)+" m";
+        } else if (layer instanceof L.Polygon) {
+        	// 如果是面要素则返回面积
+            var latlngs = layer._defaultShape ? layer._defaultShape() : layer.getLatLngs(),
+                area = L.GeometryUtil.geodesicArea(latlngs);
+            // console.log(latlngs);
+            return "Area: "+L.GeometryUtil.readableArea(area, true);
+        } else if (layer instanceof L.Polyline) {
+        	// 如果是线要素则返回长度
+            var latlngs = layer._defaultShape ? layer._defaultShape() : layer.getLatLngs(),
+                distance = 0;
+            // console.log(latlngs);
+            if (latlngs.length < 2) {
+                return "Distance: N/A";
+            } else {
+                for (var i = 0; i < latlngs.length-1; i++) {
+                    distance += latlngs[i].distanceTo(latlngs[i+1]);
+                }
+                return "Distance: "+_round(distance, 2)+" m";
+            }
+        }
+        return null;
+    };
+
+</script>
+{% endblock %}

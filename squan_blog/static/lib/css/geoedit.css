@@ -1,0 +1,14 @@
+* {
+	font-family: 'STXiHei';
+	font-size: larger;
+}
+html, body {
+	padding: 0;
+	height: 90%;
+	width: 100%;
+	background-color: black;
+}
+#map {
+	height: 90%;
+	width: 100%;
+}
