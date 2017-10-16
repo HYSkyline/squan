@@ -43,7 +43,7 @@
 <script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/edit/handler/Edit.Circle.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/edit/handler/Edit.Rectangle.js') }}"></script>
 
-<link rel="stylesheet" href="{{ url_for('static', filename='lib/css/geoedit.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='lib/css/geobase.css') }}">
 {% endblock %}
 {% block title %}双犬·尺规{% endblock %}
 
@@ -125,11 +125,11 @@
         if (content !== null) {
             layer.bindPopup(content);
         }
-        if (event.layerType == 'marker') {
+        if (event.layerType === 'marker') {
         	geoType.value = 'POINT';
         	var ptLatLng = layer.getLatLng();
         	geoCoordinate.value = [ptLatLng['lng'] + ' ' + ptLatLng['lat']];
-        } else if (event.layerType == 'polyline') {
+        } else if (event.layerType === 'polyline') {
         	geoType.value = 'LINESTRING';
         	var plLatLngs = layer.getLatLngs();
         	var pl_points = [];
@@ -137,7 +137,7 @@
         		pl_points.push([plLatLngs[i]['lng'] + ' ' + plLatLngs[i]['lat']]);
         	}
         	geoCoordinate.value = pl_points;
-        } else if (event.layerType == 'polygon') {
+        } else if (event.layerType === 'polygon') {
         	geoType.value = 'POLYGON';
         	var pgLatLngs = layer.getLatLngs()[0];
         	var pg_points = [];
@@ -157,7 +157,7 @@
     // 要素编辑
     map.on(L.Draw.Event.EDITED, function(event) {
         var layers = event.layers,
-            content = null;
+        var content = null;
         layers.eachLayer(function(layer) {
             content = getPopupContent(layer);
             if (content !== null) {

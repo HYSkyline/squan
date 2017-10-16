@@ -52,7 +52,7 @@
 	var pgons = [];
 	// geom['polygon']即为所有的multipolygon记录
 	// mpg即为单条multipolygon记录
-	{% for mpg in geom['polygon'] %}
+	{% for mpg in geom['multipolygon'] %}
 		var pgon = [];
 		// pg_part即为multipolygon的部分(单个面)
 		{% for pg_part in mpg %}

@@ -9,31 +9,68 @@ from geoalchemy2.functions import *
 from geoalchemy2.shape import from_shape, to_shape
 import json
 import time
+import copy
 
 
-@geo.route('/base', methods=['GET', 'POST'])
+@geo.route('/view', methods=['GET', 'POST'])
 def geo_query():
 	geo_session_class = sessionmaker(bind=geo_engine)
 	geo_session = geo_session_class()
-	pt_res = geo_session.query(Geopoint.geopt.ST_AsGeoJSON()).all()
-	pl_res = geo_session.query(Geopolyline.geopl.ST_AsGeoJSON()).all()
-	pg_res = geo_session.query(Geopolygon.geopg.ST_AsGeoJSON()).all()
+	pt_res = geo_session.query(
+		Geopoint.ptid,
+		Geopoint.projectname,
+		Geopoint.quizee,
+		Geopoint.quiztime,
+		Geopoint.geopt.ST_AsGeoJSON()
+	).all()
+	pl_res = geo_session.query(
+		Geopolyline.plid,
+		Geopolyline.projectname,
+		Geopolyline.quizee,
+		Geopolyline.quiztime,
+		Geopolyline.geopl.ST_AsGeoJSON()
+	).all()
+	pg_res = geo_session.query(
+		Geopolygon.pgid,
+		Geopolygon.projectname,
+		Geopolygon.quizee,
+		Geopolygon.quiztime,
+		Geopolygon.geopg.ST_AsGeoJSON()
+	).all()
 
-	pt = []
-	pl = []
-	pg = []
+	pt_list = []
+	pl_list = []
+	pg_list = []
+	pt = {}
+	pl = {}
+	pg = {}
 	for each in pt_res:
-		pt.append(json.loads(each[0])['coordinates'])
+		pt['ptid'] = each[0]
+		pt['projectname'] = each[1]
+		pt['quizee'] = each[2]
+		pt['quiztime'] = each[3]
+		pt['geopt'] = json.loads(each[4])
+		pt_list.append(copy.deepcopy(pt))
 	for each in pl_res:
-		pl.append(json.loads(each[0])['coordinates'])
+		pl['plid'] = each[0]
+		pl['projectname'] = each[1]
+		pl['quizee'] = each[2]
+		pl['quiztime'] = each[3]
+		pl['geopl'] = json.loads(each[4])
+		pl_list.append(copy.deepcopy(pl))
 	for each in pg_res:
-		pg.append(json.loads(each[0])['coordinates'])
+		pg['pgid'] = each[0]
+		pg['projectname'] = each[1]
+		pg['quizee'] = each[2]
+		pg['quiztime'] = each[3]
+		pg['geopg'] = json.loads(each[4])
+		pg_list.append(copy.deepcopy(pg))
 	geom = {
-		'point': pt,
-		'polyline': pl,
-		'polygon': pg
+		'point': pt_list,
+		'polyline': pl_list,
+		'polygon': pg_list
 	}
-	return render_template('geo/geobase.html', geom=geom)
+	return render_template('geo/geoview.html', geom=geom)
 
 
 @geo.route('/edit', methods=['GET', 'POST'])
@@ -70,7 +107,7 @@ def geo_edit():
 					projectname='init',
 					quizee='HYSkyline',
 					quiztime=time.time(),
-					geopg='MULTIPOLYGON' + '(((' + geo_coord.encode('utf-8') + ')))'
+					geopg='POLYGON' + '((' + geo_coord.encode('utf-8') + '))'
 				)
 			)
 			geo_session.commit()

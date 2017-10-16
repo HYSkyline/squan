@@ -160,4 +160,4 @@ class Geopolygon(db.Model):
     projectname = db.Column(db.Text)
     quizee = db.Column(db.String(32))
     quiztime = db.Column(db.Numeric)
-    geopg = db.Column(Geography(geometry_type='MULTIPOLYGON', srid=4326))
+    geopg = db.Column(Geography(geometry_type='POLYGON', srid=4326))
