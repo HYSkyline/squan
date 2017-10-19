@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 
 from flask import render_template, session, redirect, url_for, current_app, request
+from flask_login import login_required, current_user
 from .. import db, geo_engine
 from ..models import Geopoint, Geopolyline, Geopolygon, GeoBase
 from . import geo
@@ -73,8 +74,9 @@ def geo_query():
 	return render_template('geo/geoview.html', geom=geom)
 
 
-@geo.route('/edit', methods=['GET', 'POST'])
-def geo_edit():
+@geo.route('/<project_name>', methods=['GET', 'POST'])
+@login_required
+def geo_edit(project_name):
 	geo_session_class = sessionmaker(bind=geo_engine)
 	geo_session = geo_session_class()
 	if request.method == 'GET':
@@ -84,21 +86,21 @@ def geo_edit():
 			Geopoint.quizee,
 			Geopoint.quiztime,
 			Geopoint.geopt.ST_AsGeoJSON()
-		).all()
+		).filter_by(projectname=project_name).all()
 		pl_res = geo_session.query(
 			Geopolyline.plid,
 			Geopolyline.projectname,
 			Geopolyline.quizee,
 			Geopolyline.quiztime,
 			Geopolyline.geopl.ST_AsGeoJSON()
-		).all()
+		).filter_by(projectname=project_name).all()
 		pg_res = geo_session.query(
 			Geopolygon.pgid,
 			Geopolygon.projectname,
 			Geopolygon.quizee,
 			Geopolygon.quiztime,
 			Geopolygon.geopg.ST_AsGeoJSON()
-		).all()
+		).filter_by(projectname=project_name).all()
 		pt_list = []
 		pl_list = []
 		pg_list = []
@@ -134,24 +136,41 @@ def geo_edit():
 		return render_template('geo/geoedit.html', geom=geom)
 
 	if request.method == 'POST':
+		geo_id = long(float(request.form.get('geoId')))
+		print type(geo_id)
+		print str(geo_id)
+		geo_projectname = project_name
+		geo_quizee = current_user.username
 		geo_type = request.form.get('geoType')
 		geo_coord = request.form.get('geoCoordinate')
 
 		if geo_type == 'POINT':
-			geo_session.add(
-				Geopoint(
-					projectname='init',
-					quizee='HYSkyline',
-					quiztime=time.time(),
-					geopt=geo_type + '(' + geo_coord.encode('utf-8') + ')'
+			pt_res = geo_session.query(
+				Geopoint.ptid,
+				Geopoint.projectname,
+				Geopoint.quizee,
+				Geopoint.quiztime,
+				Geopoint.geopt.ST_AsText()
+			).filter_by(ptid=geo_id).first()
+			if pt_res:
+				print pt_res
+			else:
+				geo_session.add(
+					Geopoint(
+						ptid=geo_id,
+						projectname=geo_projectname,
+						quizee=geo_quizee,
+						quiztime=time.time(),
+						geopt=geo_type + '(' + geo_coord.encode('utf-8') + ')'
+					)
 				)
-			)
-			geo_session.commit()
+				geo_session.commit()
 		elif geo_type == 'LINESTRING':
 			geo_session.add(
 				Geopolyline(
-					projectname='init',
-					quizee='HYSkyline',
+					plid=geo_id,
+					projectname=geo_projectname,
+					quizee=geo_quizee,
 					quiztime=time.time(),
 					geopl=geo_type + '(' + geo_coord.encode('utf-8') + ')'
 				)
@@ -160,8 +179,9 @@ def geo_edit():
 		elif geo_type == 'POLYGON':
 			geo_session.add(
 				Geopolygon(
-					projectname='init',
-					quizee='HYSkyline',
+					pgid=geo_id,
+					projectname=geo_projectname,
+					quizee=geo_quizee,
 					quiztime=time.time(),
 					geopg='POLYGON' + '((' + geo_coord.encode('utf-8') + '))'
 				)
@@ -169,4 +189,4 @@ def geo_edit():
 			geo_session.commit()
 		else:
 			pass
-	return 0
+	return ('', 204)
