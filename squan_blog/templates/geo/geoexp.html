@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/css/test.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='lib/css/leaflet.css') }}" >
+<script type="application/javascript" src="{{ url_for('static', filename='lib/js/leaflet.js') }}"></script>
+<script src="{{ url_for('static', filename='lib/js/esri-leaflet.js') }}"></script>
+{% endblock %}
+{% block title %}双犬·方寸{% endblock %}
+
+{% block page_content %}
+<div id="map"></div>
+<script>
+    var map = L.map('map').setView([30.24105142736931, 120.14077259673466], 12);
+    var streetMap = L.layerGroup([L.tileLayer('http://tile-{s}.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    })]);
+    var googleMap = L.layerGroup([L.tileLayer('http://www.google.cn/maps/vt?lyrs=s@189&x={x}&y={y}&z={z}', {
+        attribution: 'Map data &copy; 2015 <a href="https://www.google.com/permissions/geoguidelines.html">Google</a>'
+    })]);
+    var esriMap = L.layerGroup([L.esri.basemapLayer('Imagery')]);
+    var mapBase = {
+        '街道地图': streetMap,
+        '卫星影像': googleMap,
+        'ESRI  HD': esriMap
+    };
+    map.addLayer(streetMap);
+    L.control.layers(mapBase).addTo(map);
+
+
+    // show point
+	// L.marker([31.2358296784, 121.4659482490]).addTo(map);
+	{% for pt in geom['point'] %}
+		L.marker([{{ pt[1] }}, {{ pt[0] }}]).addTo(map);
+	{% endfor %}
+
+	// show polyline
+	var polylineOptions = {
+        color: 'rgba(255,0,0,0.5)',
+        weight: 6
+    };
+    {% for pl_list in geom['polyline'] %}
+    	var pline = [];
+    	{% for pl_point in pl_list %}
+    		pline.push([{{ pl_point[1] }}, {{ pl_point[0] }}]);
+    	{% endfor %}
+    	L.polyline(pline, polylineOptions).addTo(map);
+    {% endfor %}
+
+    // show polygon
+	// L.marker([31.2358296784, 121.4659482490]).addTo(map);
+	var pgons = [];
+	// geom['polygon']即为所有的polygon记录
+	// pg即为单条polygon记录
+	{% for pg_record in geom['polygon'] %}
+		var pg_record = [];
+		// pg_part即为polygon的部分(单个面)
+		{% for pg_part in pg_record['geopg']['coordinates'] %}
+			var pg_part = [];
+				// pg_point即为不同组成部分的端点坐标列表
+			{% for pg_point in pg_part %}
+				pg_part.push([{{ pg_point[1] }}, {{ pg_point[0] }}]);
+			{% endfor %}
+			pg_record.push(pg_part);
+		{% endfor %}
+		pgons.push(pg_record);
+		L.polygon(pg_record, {color: 'red'}).addTo(map);
+	{% endfor %}
+	// map.fitBounds(polygons.getBounds());
+
+	// show multipolygon
+	// L.marker([31.2358296784, 121.4659482490]).addTo(map);
+	var pgons = [];
+	// geom['polygon']即为所有的multipolygon记录
+	// mpg即为单条multipolygon记录
+	{% for mpg in geom['multipolygon'] %}
+		var pgon = [];
+		// pg_part即为multipolygon的部分(单个面)
+		{% for pg_part in mpg %}
+			var pg_part = [];
+			// pg_part_detail即为单个面的组成部分(边界或孔洞)
+			{% for pg_part_detail in pg_part %}
+				var pg_part_detail = [];
+				// pg_point即为不同组成部分的端点坐标
+				{% for pg_point in pg_part_detail %}
+					pg_part_detail.push([{{ pg_point[1] }}, {{ pg_point[0] }}]);
+				{% endfor %}
+				pg_part.push(pg_part_detail);
+			{% endfor %}
+			pgon.push(pg_part);
+		{% endfor %}
+		pgons.push(pgon);
+	{% endfor %}
+	var polygons = L.polygon(pgons, {color: 'red'}).addTo(map);
+	// map.fitBounds(polygons.getBounds());
+</script>
+{% endblock %}
