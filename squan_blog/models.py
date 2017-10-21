@@ -133,7 +133,7 @@ class charQuote():
         self.chardict = char_dict
 
 
-class Geopoint(db.Model):
+class Geopoint(GeoBase):
     """点类地理数据"""
     __tablename__ = 'geo_point'
     ptid = db.Column(db.Integer, primary_key=True)
@@ -143,7 +143,7 @@ class Geopoint(db.Model):
     geopt = db.Column(Geography(geometry_type='POINT', srid=4326))
 
 
-class Geopolyline(db.Model):
+class Geopolyline(GeoBase):
     """线类地理数据"""
     __tablename__ = 'geo_polyline'
     plid = db.Column(db.Integer, primary_key=True)
@@ -153,7 +153,7 @@ class Geopolyline(db.Model):
     geopl = db.Column(Geography(geometry_type='LINESTRING', srid=4326))
 
 
-class Geopolygon(db.Model):
+class Geopolygon(GeoBase):
     """面类地理数据"""
     __tablename__ = 'geo_polygon'
     pgid = db.Column(db.Integer, primary_key=True)

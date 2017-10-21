@@ -145,13 +145,7 @@ def geo_edit(project_name):
 		geo_coord = request.form.get('geoCoordinate')
 
 		if geo_type == 'POINT':
-			pt_res = geo_session.query(
-				Geopoint.ptid,
-				Geopoint.projectname,
-				Geopoint.quizee,
-				Geopoint.quiztime,
-				Geopoint.geopt.ST_AsText()
-			).filter_by(ptid=geo_id).first()
+			pt_res = geo_session.query(Geopoint).filter_by(ptid=geo_id).first()
 			if pt_res:
 				print pt_res
 			else:
