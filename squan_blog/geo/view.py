@@ -8,6 +8,7 @@ from . import geo
 from sqlalchemy.orm import sessionmaker
 from geoalchemy2.functions import *
 from geoalchemy2.shape import from_shape, to_shape
+from shapely.geometry import Point, LineString, Polygon
 import json
 import time
 import copy
@@ -134,53 +135,81 @@ def geo_edit(project_name):
 			'polygon': pg_list
 		}
 		return render_template('geo/geoedit.html', geom=geom)
-
 	if request.method == 'POST':
 		geo_id = long(float(request.form.get('geoId')))
-		print type(geo_id)
-		print str(geo_id)
 		geo_projectname = project_name
 		geo_quizee = current_user.username
 		geo_type = request.form.get('geoType')
 		geo_coord = request.form.get('geoCoordinate')
-
-		if geo_type == 'POINT':
-			pt_res = geo_session.query(Geopoint).filter_by(ptid=geo_id).first()
-			if pt_res:
-				print pt_res
-			else:
-				geo_session.add(
-					Geopoint(
-						ptid=geo_id,
-						projectname=geo_projectname,
-						quizee=geo_quizee,
-						quiztime=time.time(),
-						geopt=geo_type + '(' + geo_coord.encode('utf-8') + ')'
-					)
-				)
-				geo_session.commit()
-		elif geo_type == 'LINESTRING':
-			geo_session.add(
-				Geopolyline(
-					plid=geo_id,
-					projectname=geo_projectname,
-					quizee=geo_quizee,
-					quiztime=time.time(),
-					geopl=geo_type + '(' + geo_coord.encode('utf-8') + ')'
-				)
-			)
-			geo_session.commit()
-		elif geo_type == 'POLYGON':
-			geo_session.add(
-				Geopolygon(
-					pgid=geo_id,
-					projectname=geo_projectname,
-					quizee=geo_quizee,
-					quiztime=time.time(),
-					geopg='POLYGON' + '((' + geo_coord.encode('utf-8') + '))'
-				)
-			)
-			geo_session.commit()
+		geo_event = request.form.get('geoEvent')
+		print ''
+		print ''
+		print geo_type.encode('utf-8') + ' ' + str(geo_id) + '  processing.'
+		print ''
+		print ''
+		if geo_event == 'DELETED':
+			if geo_type == 'POINT':
+				pt_res = geo_session.query(Geopoint).filter_by(ptid=geo_id).first()
+				geo_session.delete(pt_res)
+			elif geo_type == 'LINESTRING':
+				pl_res = geo_session.query(Geopolyline).filter_by(plid=geo_id).first()
+				geo_session.delete(pl_res)
+			elif geo_type == 'POLYGON':
+				pg_res = geo_session.query(Geopolygon).filter_by(pgid=geo_id).first()
+				geo_session.delete(pg_res)
 		else:
-			pass
+			if geo_type == 'POINT':
+				pt_res = geo_session.query(Geopoint).filter_by(ptid=geo_id).first()
+				if pt_res:
+					pt_lng, pt_lat = geo_coord.encode('utf-8').split(' ')
+					pt_res.geopt = from_shape(Point(float(pt_lng), float(pt_lat)), srid=4326)
+				else:
+					geo_session.add(
+						Geopoint(
+							ptid=geo_id,
+							projectname=geo_projectname,
+							quizee=geo_quizee,
+							quiztime=time.time(),
+							geopt=geo_type + '(' + geo_coord.encode('utf-8') + ')'
+						)
+					)
+			elif geo_type == 'LINESTRING':
+				pl_res = geo_session.query(Geopolyline).filter_by(plid=geo_id).first()
+				if pl_res:
+					polyline_point_list = []
+					for each_point in geo_coord.encode('utf-8').split(','):
+						pt_lng, pt_lat = each_point.split(' ')
+						polyline_point_list.append((float(pt_lng), float(pt_lat)))
+					pl_res.geopl = from_shape(LineString(polyline_point_list), srid=4326)
+				else:
+					geo_session.add(
+						Geopolyline(
+							plid=geo_id,
+							projectname=geo_projectname,
+							quizee=geo_quizee,
+							quiztime=time.time(),
+							geopl=geo_type + '(' + geo_coord.encode('utf-8') + ')'
+						)
+					)
+			elif geo_type == 'POLYGON':
+				pg_res = geo_session.query(Geopolygon).filter_by(pgid=geo_id).first()
+				if pg_res:
+					polygon_point_list = []
+					for each_point in geo_coord.encode('utf-8').split(',')[:-1]:
+						pt_lng, pt_lat = each_point.split(' ')
+						polygon_point_list.append((float(pt_lng), float(pt_lat)))
+					pg_res.geopg = from_shape(Polygon(polygon_point_list), srid=4326)
+				else:
+					geo_session.add(
+						Geopolygon(
+							pgid=geo_id,
+							projectname=geo_projectname,
+							quizee=geo_quizee,
+							quiztime=time.time(),
+							geopg='POLYGON' + '((' + geo_coord.encode('utf-8') + '))'
+						)
+					)
+			else:
+				pass
+		geo_session.commit()
 	return ('', 204)

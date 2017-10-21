@@ -56,6 +56,7 @@
 	<input type="text" name="geoId" value="" />
 	<input type="text" name="geoType" value="" />
 	<input type="text" name="geoCoordinate" value="" />
+    <input type="text" name="geoEvent" value="" />
 	<input id="geoCommit" type="submit" />
 </form>
 <iframe name="geoCommitFrame" style="display: none;"></iframe>
@@ -64,6 +65,7 @@
 	geoId = document.getElementsByName('geoId')[0];
 	geoType = document.getElementsByName('geoType')[0];
 	geoCoordinate = document.getElementsByName('geoCoordinate')[0];
+    geoEvent = document.getElementsByName('geoEvent')[0];
 	geoCommit = document.getElementById('geoCommit');
 
 	ptId = 0;
@@ -173,17 +175,32 @@
     // 创建要素
     map.on(L.Draw.Event.CREATED, function(event) {
         var layer = event.layer;
+        geoEvent.value = 'CREATED';
         geoCommitPrepare(layer);
         geoForm.submit();
         drawnItems.addLayer(layer);
+        console.log(layer.pid + geoType.value + ' summit.');
     });
 
     // 要素编辑
     map.on(L.Draw.Event.EDITED, function(event) {
         var layers = event.layers;
+        geoEvent.value = 'EDITED';
         layers.eachLayer(function(layer) {
             geoCommitPrepare(layer);
             geoForm.submit();
+            console.log(layer.pid + geoType.value + ' summit.');
+        });
+    });
+
+    // 要素删除
+    map.on(L.Draw.Event.DELETED, function(event) {
+        var layers = event.layers;
+        geoEvent.value = 'DELETED';
+        layers.eachLayer(function(layer) {
+            geoCommitPrepare(layer);
+            geoForm.submit();
+            console.log(layer.pid + geoType.value + ' summit.');
         });
     });
 
@@ -231,7 +248,6 @@
         	}
         	geoCoordinate.value = pl_points;
         }
-        // console.log(geoId.value + '\n' + geoType.value + '\n' + geoCoordinate.value);
     }
 </script>
 {% endblock %}
