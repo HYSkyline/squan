@@ -51,23 +51,8 @@
 
 {% block page_content %}
 <div id="map"></div>
-
-<form id="geoForm" method="post" target="geoCommitFrame" style="display: block;">
-	<input type="text" name="geoId" value="" />
-	<input type="text" name="geoType" value="" />
-	<input type="text" name="geoCoordinate" value="" />
-    <input type="text" name="geoEvent" value="" />
-	<input id="geoCommit" type="submit" />
-</form>
-<iframe name="geoCommitFrame" style="display: none;"></iframe>
 <script>
-	geoForm = document.getElementById('geoForm');
-	geoId = document.getElementsByName('geoId')[0];
-	geoType = document.getElementsByName('geoType')[0];
-	geoCoordinate = document.getElementsByName('geoCoordinate')[0];
-    geoEvent = document.getElementsByName('geoEvent')[0];
-	geoCommit = document.getElementById('geoCommit');
-
+    geom_event = '';
 	ptId = 0;
 	plId = 0;
 	pgId = 0;
@@ -175,79 +160,79 @@
     // 创建要素
     map.on(L.Draw.Event.CREATED, function(event) {
         var layer = event.layer;
-        geoEvent.value = 'CREATED';
+        geom_event = 'CREATED';
         geoCommitPrepare(layer);
-        geoForm.submit();
         drawnItems.addLayer(layer);
-        console.log(layer.pid + geoType.value + ' summit.');
     });
 
     // 要素编辑
     map.on(L.Draw.Event.EDITED, function(event) {
         var layers = event.layers;
-        geoEvent.value = 'EDITED';
+        geom_event = 'EDITED';
         layers.eachLayer(function(layer) {
             geoCommitPrepare(layer);
-            geoForm.submit();
-            console.log(layer.pid + geoType.value + ' summit.');
         });
     });
 
     // 要素删除
     map.on(L.Draw.Event.DELETED, function(event) {
         var layers = event.layers;
-        geoEvent.value = 'DELETED';
+        geom_event = 'DELETED';
         layers.eachLayer(function(layer) {
             geoCommitPrepare(layer);
-            geoForm.submit();
-            console.log(layer.pid + geoType.value + ' summit.');
         });
     });
 
     function geoCommitPrepare(layer) {
+    	var geom_type
+    	var geom_coordinate
     	if (layer instanceof L.Marker) {
-    		if (layer.pid) {
-    			geoId.value = layer.pid;
-    		} else {
+    		if (typeof layer.pid === 'undefined') {
     			layer.pid = ptId;
-    			geoId.value = ptId;
     			ptId += 1;
     		}
-        	geoType.value = 'POINT';
+        	geom_type = 'POINT';
         	var ptLatLng = layer.getLatLng();
-        	geoCoordinate.value = [ptLatLng['lng'] + ' ' + ptLatLng['lat']];
+        	geom_coordinate = [ptLatLng['lng'], ptLatLng['lat']];
         } else if (layer instanceof L.Polygon) {
-        	if (layer.pid) {
-    			geoId.value = layer.pid;
-    		} else {
+        	if (typeof layer.pid === 'undefined') {
     			layer.pid = pgId;
-    			geoId.value = pgId;
     			pgId += 1;
     		}
-        	geoType.value = 'POLYGON';
+        	geom_type = 'POLYGON';
         	var pgLatLngs = layer.getLatLngs()[0];
         	var pg_points = [];
         	for (var i = 0; i < pgLatLngs.length; i++) {
-        		pg_points.push([pgLatLngs[i]['lng'] + ' ' + pgLatLngs[i]['lat']]);
+        		pg_points.push([pgLatLngs[i]['lng'], pgLatLngs[i]['lat']]);
         	}
-        	pg_points.push([pgLatLngs[0]['lng'] + ' ' + pgLatLngs[0]['lat']])
-        	geoCoordinate.value = pg_points;
+        	pg_points.push([pgLatLngs[0]['lng'], pgLatLngs[0]['lat']])
+        	geom_coordinate = pg_points;
         } else if (layer instanceof L.Polyline) {
-        	if (layer.pid) {
-    			geoId.value = layer.pid;
-    		} else {
+        	if (typeof layer.pid === 'undefined') {
     			layer.pid = plId;
-    			geoId.value = plId;
     			plId += 1;
     		}
-        	geoType.value = 'LINESTRING';
+        	geom_type = 'LINESTRING';
         	var plLatLngs = layer.getLatLngs();
         	var pl_points = [];
         	for (var i = 0; i < plLatLngs.length; i++) {
-        		pl_points.push([plLatLngs[i]['lng'] + ' ' + plLatLngs[i]['lat']]);
+        		pl_points.push([plLatLngs[i]['lng'], plLatLngs[i]['lat']]);
         	}
-        	geoCoordinate.value = pl_points;
+        	geom_coordinate = pl_points;
         }
+        $.ajax({
+            type: "POST",
+            url: "http://127.0.0.1:5000/geo/{{ projectname }}",
+            data:{
+                geo_id: layer.pid,
+                geo_type: geom_type,
+                geo_coordinate: JSON.stringify(geom_coordinate),
+                geo_event: geom_event,
+            },
+            success: function (data) {
+            	console.log(data.status + ' ' + data.info);
+            }
+        })
     }
 </script>
 {% endblock %}
