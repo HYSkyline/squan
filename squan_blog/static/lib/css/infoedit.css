@@ -114,6 +114,12 @@ div#avatarPreview {
 	margin-top: 20px;
 	box-sizing: border-box;
 }
+#email {
+	cursor: url('../../img/mouse/TextSelect.cur'), text;
+}
+#intrtext {
+	cursor: url('../../img/mouse/TextSelect.cur'), text;
+}
 
 input#submit {
 	width: 100%;

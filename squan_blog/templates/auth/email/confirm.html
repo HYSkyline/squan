@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="keywords" content="韩双犬,HYSkyline">
+    <meta name="description" content="韩双犬的个人网页">
+    <meta name="robots" content="nofollow">
+    <meta name="author" content="傲雪双犬,HYSkyline@163.com">
+    <meta name="revisit-after" content="7days">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+	<title>SQuanBlog邮箱验证</title>
+
+	<style type="text/css">
+		* {
+			font-family: 'STXiHei';
+			font-size: large;
+			text-align: center;
+		}
+		html {
+			padding: 0;
+		}
+		body {
+			padding: 0;
+		}
+		.panel {
+			height: 100%;
+			border: solid 1px;
+			border-color: rgba(0, 0, 0, 0.2);
+			border-radius: 6px;
+			padding-left: 10px;
+			padding-right: 10px;
+		}
+		hr {
+			border-top-color: rgba(0, 0, 0, 0.1);
+		}
+		a {
+			display: inline-block;
+			width: 60%;
+			border: solid 1px;
+			border-color: rgba(0, 0, 0, 0.2);
+			border-radius: 4px;
+			margin-top: 10px;
+			font-size: 24px;
+			color: black;
+			text-decoration: none;
+		}
+		#author {
+			font-size: x-small;
+		}
+	</style>
+</head>
+<body>
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<h2>双犬科技基站</h2>
+			<hr />
+			<div class="intr">
+				{{ user.username }}阁下，请打开以下链接以验证账户。
+			</div>
+			<div class="intr">
+				Dear {{ user.username }}, Please open the following link to confirm your account.
+			</div>
+			<div class="intr">
+				Уважаемый доктор {{ user.username }}, Пожалуйста, откройте следующую ссылку для проверки учетной записи.
+			</div>
+			<div class="intr">
+				{{ user.username }}様，アカウントを確認するには次のリンクを開いてください。
+			</div>
+			<hr />
+			<div class="link">
+				<a href="{{ url_for('auth.mail_confirm', token=token, _external=True) }}">验证</a>
+				<p id="author">——双犬——</p>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

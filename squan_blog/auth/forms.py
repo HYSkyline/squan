@@ -3,7 +3,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, DateField, TextField, TextAreaField, FileField
 from flask_wtf.file import FileField, FileAllowed, FileRequired
-from wtforms.validators import Required, Regexp, Length, Email, EqualTo
+from wtforms.validators import Required, Regexp, Length, EqualTo
+from ..validators import Mail
 from wtforms import ValidationError
 from ..models import User
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -98,6 +99,16 @@ class InfoEditForm(FlaskForm):
 			"style": "background-color: transparent;"
 		}
 	)
+
+	email = StringField(
+		u'',
+        validators=[Mail('email' ,message='异常的邮箱地址格式')],
+        render_kw={
+			"placeholder": u"邮箱",
+			"style": "background-color: transparent;"
+		}
+    )
+
 	intrtext = TextAreaField(
 		u'',
 		validators=[

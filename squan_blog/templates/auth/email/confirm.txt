@@ -1,0 +1,23 @@
+0.
+{{ user.username }}阁下，
+请打开以下链接以验证账户。
+{{ url_for('auth.mail_confirm', token=token, _external=True) }}
+双犬
+
+1.
+Dear {{ user.username }},
+Please open the following link to confirm your account.
+{{ url_for('auth.mail_confirm', token=token, _external=True) }}
+双犬
+
+2.
+Уважаемый доктор {{ user.username }},
+Пожалуйста, откройте следующую ссылку для проверки учетной записи.
+{{ url_for('auth.mail_confirm', token=token, _external=True) }}
+双犬
+
+3.
+{{ user.username }}様，
+アカウントを確認するには次のリンクを開いてください。
+{{ url_for('auth.mail_confirm', token=token, _external=True) }}
+双犬

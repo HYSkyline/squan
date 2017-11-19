@@ -2,6 +2,8 @@
 
 from sqlalchemy.ext.declarative import declarative_base
 from werkzeug.security import generate_password_hash, check_password_hash
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from flask import current_app
 from flask_login import UserMixin
 from . import db, login_manager
 from geoalchemy2 import Geography
@@ -27,6 +29,8 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(16))
     password_hash = db.Column(db.String(128))
     role_id = db.Column(db.Integer, db.ForeignKey('rolelist.role_id'))
+    user_mail = db.Column(db.Text)
+    mail_confirmed = db.Column(db.Boolean, default=False)
     birthdate = db.Column(db.Date)
     intr = db.Column(db.Text)
     prefix = db.Column(db.Boolean)
@@ -57,32 +61,34 @@ class User(UserMixin, db.Model):
         try:
             return unicode(self.uid)
         except AttributeError:
-            raise NotImplementedError('No id attribute - override get_id()')
+            raise NotImplementedError('No Column named uid in model User - already override get_id()')
+
+
+    def generate_mail_confirm_token(self, expiration=7200):
+        mail_token = Serializer(
+            current_app.config['SECRET_KEY'],
+            expires_in=expiration
+        )
+        return mail_token.dumps({'uid': self.uid})
+
+
+    def mail_confirm(self, token):
+        mail_token = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            confirm_data = mail_token.loads(token)
+        except:
+            return False
+        if confirm_data.get('uid') != self.uid:
+            return False
+        self.mail_confirmed = True
+        db.session.add(self)
+        db.session.commit()
+        return True
 
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-
-class UserQuiz(db.Model):
-    """用户的测试信息"""
-    __tablename__ = 'userquiz'
-    qid = db.Column(db.Integer, primary_key=True)
-    quizee = db.Column(db.Text)
-    quiz_rec = db.Column(db.String(4))
-    r_score = db.Column(db.Integer)
-    a_score = db.Column(db.Integer)
-    b_score = db.Column(db.Integer)
-    m_score = db.Column(db.Integer)
-    w_score = db.Column(db.Integer)
-    s_score = db.Column(db.Integer)
-    u_score = db.Column(db.Integer)
-    g_score = db.Column(db.Integer)
-
-
-    def __repr__(self):
-        return '<Quizee %r>' % self.quizee
 
 
 class QuizQuestion(db.Model):
