@@ -18,23 +18,34 @@
 			font-family: 'STXiHei';
 			font-size: large;
 			text-align: center;
+			user-select: none;
 		}
 		html {
 			padding: 0;
+			background-color: #E6E6FA;
+			height: 100%;
 		}
 		body {
-			padding: 0;
+			margin: 0;
+			height: 100%;
 		}
 		.panel {
-			height: 100%;
+			display: inline-block;
+			width: 60%;
 			border: solid 1px;
 			border-color: rgba(0, 0, 0, 0.2);
 			border-radius: 6px;
 			padding-left: 10px;
 			padding-right: 10px;
+			margin-top: 10px;
+			background-color: white;
 		}
 		hr {
 			border-top-color: rgba(0, 0, 0, 0.1);
+		}
+		.intr {
+			text-align: left;
+			font-size: 16px;
 		}
 		a {
 			display: inline-block;
@@ -43,12 +54,12 @@
 			border-color: rgba(0, 0, 0, 0.2);
 			border-radius: 4px;
 			margin-top: 10px;
-			font-size: 24px;
+			font-size: 20px;
 			color: black;
 			text-decoration: none;
 		}
 		#author {
-			font-size: x-small;
+			font-size: xx-small;
 		}
 	</style>
 </head>
@@ -58,18 +69,23 @@
 			<h2>双犬科技基站</h2>
 			<hr />
 			<div class="intr">
-				{{ user.username }}阁下，请打开以下链接以验证账户。
+				{{ user.username }}阁下，请点击按钮以验证账户。
 			</div>
+			<br />
 			<div class="intr">
-				Dear {{ user.username }}, Please open the following link to confirm your account.
+				Dear {{ user.username }}, Please click the following button to confirm your account.
 			</div>
+			<br />
 			<div class="intr">
-				Уважаемый доктор {{ user.username }}, Пожалуйста, откройте следующую ссылку для проверки учетной записи.
+				Уважаемый доктор {{ user.username }}, Нажмите на кнопку, чтобы проверить учетную запись.
 			</div>
+			<br />
 			<div class="intr">
 				{{ user.username }}様，アカウントを確認するには次のリンクを開いてください。
 			</div>
 			<hr />
+		</div>
+		<div class="panel-footer">
 			<div class="link">
 				<a href="{{ url_for('auth.mail_confirm', token=token, _external=True) }}">验证</a>
 				<p id="author">——双犬——</p>

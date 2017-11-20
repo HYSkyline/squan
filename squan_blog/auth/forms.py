@@ -104,7 +104,7 @@ class InfoEditForm(FlaskForm):
 		u'',
         validators=[Mail('email' ,message='异常的邮箱地址格式')],
         render_kw={
-			"placeholder": u"邮箱",
+			"placeholder": u"非必填项目，邮箱地址",
 			"style": "background-color: transparent;"
 		}
     )

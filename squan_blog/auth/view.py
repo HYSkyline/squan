@@ -15,8 +15,7 @@ def before_request():
     if (
         current_user.is_authenticated and
         not current_user.mail_confirmed and
-        request.endpoint[:5] != 'auth.' and
-        request.endpoint != 'static'
+        request.endpoint[:] == 'main.secret'
     ):
         return redirect(url_for('auth.mail_unconfirm'))
 
@@ -135,10 +134,13 @@ def resend_confirmation():
         token=mail_confirm_token
     )
     flash(u'新邮件已送达' + current_user.user_mail)
-    return ('', 204)
+    return redirect(url_for('.userinfo', username=current_user.username))
 
 
 @auth.route('/mail_unconfirm')
+@login_required
 def mail_unconfirm():
-    if current_user.is_authenticated or current_user.mail_confirmed:
+    if current_user.user_mail:
         return render_template('auth/mail_unconfirmed.html')
+    else:
+        return redirect(url_for('.infoedit'))
