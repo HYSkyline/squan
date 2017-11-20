@@ -15,8 +15,8 @@ import copy
 import ast
 
 
-@geo.route('/view', methods=['GET', 'POST'])
-def geo_query():
+@geo.route('/view/<project_name>', methods=['GET', 'POST'])
+def geo_query(project_name):
 	geo_session_class = sessionmaker(bind=geo_engine)
 	geo_session = geo_session_class()
 	pt_res = geo_session.query(
@@ -25,22 +25,21 @@ def geo_query():
 		Geopoint.quizee,
 		Geopoint.quiztime,
 		Geopoint.geopt.ST_AsGeoJSON()
-	).all()
+	).filter_by(projectname=project_name).all()
 	pl_res = geo_session.query(
 		Geopolyline.plid,
 		Geopolyline.projectname,
 		Geopolyline.quizee,
 		Geopolyline.quiztime,
 		Geopolyline.geopl.ST_AsGeoJSON()
-	).all()
+	).filter_by(projectname=project_name).all()
 	pg_res = geo_session.query(
 		Geopolygon.pgid,
 		Geopolygon.projectname,
 		Geopolygon.quizee,
 		Geopolygon.quiztime,
 		Geopolygon.geopg.ST_AsGeoJSON()
-	).all()
-
+	).filter_by(projectname=project_name).all()
 	pt_list = []
 	pl_list = []
 	pg_list = []

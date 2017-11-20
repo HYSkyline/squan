@@ -80,30 +80,11 @@ def infoedit():
         current_user.birthdate = form.birthdate.data
         current_user.intr = form.intrtext.data
         current_user.prefix = form.userprefix.data
-        if not form.email.data:
-            current_user.user_mail = form.email.data
-            current_user.mail_confirmed = False
-            db.session.add(current_user)
-            db.session.commit()
-            flash(u'信息更新完成')
-        elif current_user.user_mail==form.email.data:
-            db.session.add(current_user)
-            db.session.commit()
-            flash(u'信息更新完成')
-        else:
-            current_user.user_mail = form.email.data
-            current_user.mail_confirmed = False
-            db.session.add(current_user)
-            db.session.commit()
-            mail_confirm_token = current_user.generate_mail_confirm_token()
-            send_mail(
-                current_user.user_mail,
-                u'邮箱验证邮件',
-                'auth/email/confirm',
-                user=current_user,
-                token=mail_confirm_token
-            )
-            flash(u'信息更新完成，验证邮件已送至' + current_user.user_mail)
+        current_user.user_mail = form.email.data
+        current_user.mail_confirmed = False
+        db.session.add(current_user)
+        db.session.commit()
+        flash(u'信息更新完成')
         return redirect(url_for('.userinfo', username=current_user.username))
     form.birthdate.data = current_user.birthdate
     form.intrtext.data = current_user.intr
@@ -117,14 +98,18 @@ def mail_confirm(token):
         return redirect(url_for('.userinfo', username=current_user.username))
     if current_user.mail_confirm(token):
         flash(u'邮件地址验证完成')
+        return redirect(request.args.get('next') or url_for('main.home'))
     else:
         flash(u'验证未完成:链接失效或超时，可以重新验证')
-    return redirect(url_for('.mail_unconfirm', username=current_user.username))
+        return redirect(url_for('.mail_unconfirm', username=current_user.username))
 
 
 @auth.route('/confirm')
 @login_required
 def resend_confirmation():
+    if not current_user.user_mail:
+        flash(u'请先写明邮箱地址')
+        return redirect(url_for('.infoedit'))
     mail_confirm_token = current_user.generate_mail_confirm_token()
     send_mail(
         current_user.user_mail,
@@ -140,7 +125,4 @@ def resend_confirmation():
 @auth.route('/mail_unconfirm')
 @login_required
 def mail_unconfirm():
-    if current_user.user_mail:
-        return render_template('auth/mail_unconfirmed.html')
-    else:
-        return redirect(url_for('.infoedit'))
+    return render_template('auth/mail_unconfirmed.html')
