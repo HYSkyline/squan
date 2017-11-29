@@ -1,13 +1,16 @@
-* {
-	font-family: 'STXiHei';
+.geoTypeDiv {
+    padding: 6px 8px;
+    background: white;
+    background: rgba(255, 255, 255, 0.8);
+    border: 2px solid rgba(0, 0, 0, 0.35);
+    border-radius: 5px;
 }
-html, body {
-	padding: 0;
-	height: 100%;
-	width: 100%;
-	background-color: black;
+.geodiv {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	font-size: 15px;
 }
-#map {
-	height: 100%;
-	width: 100%;
+.geoType {
+	display: inline-block;
+	vertical-align: sub;
 }

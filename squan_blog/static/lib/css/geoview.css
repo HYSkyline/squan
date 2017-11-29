@@ -1,0 +1,28 @@
+* {
+	font-family: 'STXiHei';
+}
+html, body {
+	padding: 0;
+	height: 100%;
+	width: 100%;
+	background-color: black;
+}
+#map {
+	height: 100%;
+	width: 100%;
+	cursor: url('../../img/mouse/Normal.cur'), crosshair;
+}
+.leaflet-map-pane * {
+	cursor: url('../../img/mouse/Normal.cur'), crosshair;
+}
+
+.leaflet-control {
+	cursor: url('../../img/mouse/Link.cur'), pointer;
+}
+.leaflet-control * {
+	cursor: url('../../img/mouse/Link.cur'), pointer;
+}
+.leaflet-control-layers {
+	font-size: 14px;
+	font-family: "Hiragino Sans GB";
+}

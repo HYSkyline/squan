@@ -44,6 +44,7 @@
 <script type="text/javascript" src="{{ url_for('static', filename='lib/js/leaflet-src/edit/handler/Edit.Rectangle.js') }}"></script>
 
 <script src="{{ url_for('static', filename='lib/js/esri-leaflet.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/css/geoview.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='lib/css/geobase.css') }}">
 {% endblock %}
 {% block title %}双犬·尺规{% endblock %}
@@ -108,13 +109,14 @@
     {% endfor %}
     // map.fitBounds(polygons.getBounds());
     drawnItems.addTo(map);
-
+</script>
+<script type="text/javascript">
     // 添加编辑条
     map.addControl(new L.Control.Draw({
-    	draw: {
-    		circlemarker: false,
-    		rectangle: false,
-    		circle: false,
+        draw: {
+            circlemarker: false,
+            rectangle: false,
+            circle: false,
             polygon: {
                 allowIntersection: false,
                 showArea: true
@@ -155,41 +157,41 @@
     });
 
     function geoCommitPrepare(layer) {
-    	var geom_type
-    	var geom_coordinate
-    	if (layer instanceof L.Marker) {
-    		if (typeof layer.pid === 'undefined') {
-    			layer.pid = ptId;
-    			ptId += 1;
-    		}
-        	geom_type = 'POINT';
-        	var ptLatLng = layer.getLatLng();
-        	geom_coordinate = [ptLatLng['lng'], ptLatLng['lat']];
+        var geom_type
+        var geom_coordinate
+        if (layer instanceof L.Marker) {
+            if (typeof layer.pid === 'undefined') {
+                layer.pid = ptId;
+                ptId += 1;
+            }
+            geom_type = 'POINT';
+            var ptLatLng = layer.getLatLng();
+            geom_coordinate = [ptLatLng['lng'], ptLatLng['lat']];
         } else if (layer instanceof L.Polygon) {
-        	if (typeof layer.pid === 'undefined') {
-    			layer.pid = pgId;
-    			pgId += 1;
-    		}
-        	geom_type = 'POLYGON';
-        	var pgLatLngs = layer.getLatLngs()[0];
-        	var pg_points = [];
-        	for (var i = 0; i < pgLatLngs.length; i++) {
-        		pg_points.push([pgLatLngs[i]['lng'], pgLatLngs[i]['lat']]);
-        	}
-        	pg_points.push([pgLatLngs[0]['lng'], pgLatLngs[0]['lat']])
-        	geom_coordinate = pg_points;
+            if (typeof layer.pid === 'undefined') {
+                layer.pid = pgId;
+                pgId += 1;
+            }
+            geom_type = 'POLYGON';
+            var pgLatLngs = layer.getLatLngs()[0];
+            var pg_points = [];
+            for (var i = 0; i < pgLatLngs.length; i++) {
+                pg_points.push([pgLatLngs[i]['lng'], pgLatLngs[i]['lat']]);
+            }
+            pg_points.push([pgLatLngs[0]['lng'], pgLatLngs[0]['lat']])
+            geom_coordinate = pg_points;
         } else if (layer instanceof L.Polyline) {
-        	if (typeof layer.pid === 'undefined') {
-    			layer.pid = plId;
-    			plId += 1;
-    		}
-        	geom_type = 'LINESTRING';
-        	var plLatLngs = layer.getLatLngs();
-        	var pl_points = [];
-        	for (var i = 0; i < plLatLngs.length; i++) {
-        		pl_points.push([plLatLngs[i]['lng'], plLatLngs[i]['lat']]);
-        	}
-        	geom_coordinate = pl_points;
+            if (typeof layer.pid === 'undefined') {
+                layer.pid = plId;
+                plId += 1;
+            }
+            geom_type = 'LINESTRING';
+            var plLatLngs = layer.getLatLngs();
+            var pl_points = [];
+            for (var i = 0; i < plLatLngs.length; i++) {
+                pl_points.push([plLatLngs[i]['lng'], plLatLngs[i]['lat']]);
+            }
+            geom_coordinate = pl_points;
         }
         $.ajax({
             type: "POST",
@@ -201,9 +203,40 @@
                 geo_event: geom_event,
             },
             success: function (data) {
-            	console.log(data.status + ' ' + data.info);
+                console.log(data.status + ' ' + data.info);
             }
         })
     }
+</script>
+<script type="text/javascript">
+    var geoTypeCheckbox = L.control({
+        position: 'bottomleft'
+    });
+    geoTypeCheckbox.onAdd = function (map) {
+        var geoTypeCheckDiv = L.DomUtil.create('div', 'geoTypeDiv');
+
+        var typeList = {
+            'B': '商业区',
+            'R': '居住区',
+            'G': '休闲区',
+            'M': '工作区'
+        };
+        var keyList = Object.keys(typeList);
+        for (var i = 0; i < keyList.length; i++) {
+            var geoDiv = document.createElement('div');
+            geoDiv.setAttribute('class', 'geodiv');
+            var geoInput = document.createElement('input');
+            geoInput.setAttribute('type', 'radio');
+            geoInput.setAttribute('class', 'geoType');
+            geoInput.setAttribute('name', 'geoType');
+            geoInput.setAttribute('id', 'geoType-' + keyList[i]);
+            geoDiv.appendChild(geoInput);
+            geoDiv.innerHTML += typeList[keyList[i]];
+            geoTypeCheckDiv.appendChild(geoDiv);
+        }
+        return geoTypeCheckDiv;
+    };
+    geoTypeCheckbox.addTo(map);
+    document.getElementsByClassName('geoType')[0].checked = true;
 </script>
 {% endblock %}
