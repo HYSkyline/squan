@@ -11,7 +11,7 @@ var mapBase = {
     '卫星影像': googleMap,
     'ESRI HD': esriMap
 };
-map.addLayer(streetMap);
+// map.addLayer(streetMap);
 drawnItems = L.featureGroup();
 L.control.layers(
 	{

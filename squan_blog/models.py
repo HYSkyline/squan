@@ -146,6 +146,7 @@ class Geopoint(GeoBase):
     projectname = db.Column(db.Text)
     quizee = db.Column(db.String(32))
     quiztime = db.Column(db.Numeric)
+    geotype = db.Column(db.String(4))
     geopt = db.Column(Geography(geometry_type='POINT', srid=4326))
 
 
@@ -156,6 +157,7 @@ class Geopolyline(GeoBase):
     projectname = db.Column(db.Text)
     quizee = db.Column(db.String(32))
     quiztime = db.Column(db.Numeric)
+    geotype = db.Column(db.String(4))
     geopl = db.Column(Geography(geometry_type='LINESTRING', srid=4326))
 
 
@@ -166,4 +168,5 @@ class Geopolygon(GeoBase):
     projectname = db.Column(db.Text)
     quizee = db.Column(db.String(32))
     quiztime = db.Column(db.Numeric)
+    geotype = db.Column(db.String(4))
     geopg = db.Column(Geography(geometry_type='POLYGON', srid=4326))

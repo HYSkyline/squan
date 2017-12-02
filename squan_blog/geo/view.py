@@ -86,21 +86,24 @@ def geo_edit(project_name):
 			Geopoint.projectname,
 			Geopoint.quizee,
 			Geopoint.quiztime,
-			Geopoint.geopt.ST_AsGeoJSON()
+			Geopoint.geopt.ST_AsGeoJSON(),
+			Geopoint.geotype
 		).filter_by(projectname=project_name).all()
 		pl_res = geo_session.query(
 			Geopolyline.plid,
 			Geopolyline.projectname,
 			Geopolyline.quizee,
 			Geopolyline.quiztime,
-			Geopolyline.geopl.ST_AsGeoJSON()
+			Geopolyline.geopl.ST_AsGeoJSON(),
+			Geopolyline.geotype
 		).filter_by(projectname=project_name).all()
 		pg_res = geo_session.query(
 			Geopolygon.pgid,
 			Geopolygon.projectname,
 			Geopolygon.quizee,
 			Geopolygon.quiztime,
-			Geopolygon.geopg.ST_AsGeoJSON()
+			Geopolygon.geopg.ST_AsGeoJSON(),
+			Geopolygon.geotype
 		).filter_by(projectname=project_name).all()
 		pt_list = []
 		pl_list = []
@@ -114,6 +117,7 @@ def geo_edit(project_name):
 			pt['quizee'] = each[2]
 			pt['quiztime'] = each[3]
 			pt['geopt'] = json.loads(each[4])
+			pt['geotype'] = each[5]
 			pt_list.append(copy.deepcopy(pt))
 		for each in pl_res:
 			pl['plid'] = each[0]
@@ -121,6 +125,7 @@ def geo_edit(project_name):
 			pl['quizee'] = each[2]
 			pl['quiztime'] = each[3]
 			pl['geopl'] = json.loads(each[4])
+			pt['geotype'] = each[5]
 			pl_list.append(copy.deepcopy(pl))
 		for each in pg_res:
 			pg['pgid'] = each[0]
@@ -128,13 +133,30 @@ def geo_edit(project_name):
 			pg['quizee'] = each[2]
 			pg['quiztime'] = each[3]
 			pg['geopg'] = json.loads(each[4])
+			pg['geotype'] = each[5]
 			pg_list.append(copy.deepcopy(pg))
 		geom = {
 			'point': pt_list,
 			'polyline': pl_list,
 			'polygon': pg_list
 		}
-		return render_template('geo/geoedit.html', geom=geom, projectname=project_name)
+		type_dict = {
+			'point': {
+				'C0': u'城市标志物'.encode('utf-8'),
+				'C1': u'广场等地区节点'.encode('utf-8')
+			},
+			'polyline': {
+				'L1': u'车行主干道'.encode('utf-8'),
+				'L2': u'步行为主街道'.encode('utf-8')
+			},
+			'polygon': {
+				'B': u'商业区'.encode('utf-8'),
+				'R': u'居住区'.encode('utf-8'),
+				'G': u'休闲区'.encode('utf-8'),
+				'M': u'工作区'.encode('utf-8')
+			}
+		}
+		return render_template('geo/geoedit.html', geom=geom, projectname=project_name, typedict=type_dict)
 	if request.method == 'POST':
 		try:
 			geo_id = long(float(request.form.get('geo_id')))

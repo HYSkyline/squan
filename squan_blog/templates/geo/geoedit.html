@@ -54,6 +54,7 @@
 <div id="map"></div>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/js/geoMap.js') }}"></script>
 <script>
+    // 渲染已有要素
     geom_event = '';
 	ptId = 0;
 	plId = 0;
@@ -130,6 +131,21 @@
         }
     }));
 
+    $("a.leaflet-control-zoom-in:first").attr("title","放大");
+    $("a.leaflet-control-zoom-out:first").attr("title","缩小");
+
+    $(".leaflet-draw-draw-marker:first").attr("title","绘制点");
+    $(".leaflet-draw-draw-polyline:first").attr("title","绘制线");
+    L.drawLocal.draw.handlers.polyline.tooltip.start = '单击以绘制线端点';
+    L.drawLocal.draw.handlers.polyline.tooltip.cont = '单击下一个点继续绘制线';
+    L.drawLocal.draw.handlers.polyline.tooltip.end = '单击线段末端点完成线绘制';
+    $(".leaflet-draw-draw-polygon:first").attr("title","绘制面");
+    L.drawLocal.draw.handlers.polygon.tooltip.start = '单击以绘制面节点';
+    L.drawLocal.draw.handlers.polygon.tooltip.cont = '单击下一个点继续绘制面';
+    L.drawLocal.draw.handlers.polygon.tooltip.end = '单击面起始点以完成面绘制';
+    $(".leaflet-draw-edit-edit:first").attr("title","编辑");
+    $(".leaflet-draw-edit-remove:first").attr("title","删除");
+
     // 创建要素
     map.on(L.Draw.Event.CREATED, function(event) {
         var layer = event.layer;
@@ -154,6 +170,53 @@
         layers.eachLayer(function(layer) {
             geoCommitPrepare(layer);
         });
+    });
+
+    map.on(L.Draw.Event.DRAWSTART, function(event) {
+        // console.log('开始绘制');
+        // console.log(event);
+        var layerType = event.layerType;
+        geoTypePanelAdd(layerType);
+
+        $(".leaflet-draw-tooltip:first span:first").text('单击以绘制点');
+        $("[title='Finish drawing']").text("完成");
+        $("[title='Delete last point drawn']").text("删除上一节点");
+        $("[title='Cancel drawing']").text("取消");
+        $("[title='Finish drawing']").attr("title", "完成绘制");
+        $("[title='Delete last point drawn']").attr("title", "删除上一个节点");
+        $("[title='Cancel drawing']").attr("title", "取消绘制");
+    });
+
+    map.on(L.Draw.Event.DRAWSTOP, function(event) {
+        var geoTypeCheckDiv = document.getElementsByClassName('geoTypeDiv');
+        if (geoTypeCheckDiv[0]) {
+            geoTypeCheckDiv[0].parentNode.removeChild(geoTypeCheckDiv[0]);
+        }
+    });
+
+    map.on(L.Draw.Event.EDITSTART, function(event) {
+        $("[title='Save changes']").text("保存");
+        $("[title='Cancel editing, discards all changes']").text("取消");
+        $("[title='Save changes']").attr("title", "保存编辑");
+        $("[title='Cancel editing, discards all changes']").attr("title", "取消编辑");
+
+        setTimeout(function () {
+            $(".leaflet-draw-tooltip:first span:first").text("单击取消以取消操作");
+            $(".leaflet-draw-tooltip:first span:last").text("拖动节点以编辑图层要素");
+        }, 20);
+    });
+
+    map.on(L.Draw.Event.DELETESTART, function(event) {
+        $("[title='Save changes']").text("删除");
+        $("[title='Cancel editing, discards all changes']").text("取消");
+        $("[title='Clear all layers']").text("删除全部");
+        $("[title='Save changes']").attr("title", "删除单个要素");
+        $("[title='Cancel editing, discards all changes']").attr("title", "取消删除");
+        $("[title='Clear all layers']").attr("title", "删除全部图层");
+
+        setTimeout(function () {
+            $(".leaflet-draw-tooltip:first span:first").text("单击要素以删除");
+        }, 10);
     });
 
     function geoCommitPrepare(layer) {
@@ -202,41 +265,43 @@
                 geo_coordinate: JSON.stringify(geom_coordinate),
                 geo_event: geom_event,
             },
-            success: function (data) {
-                console.log(data.status + ' ' + data.info);
-            }
+            success: function (data) {}
         })
     }
 </script>
 <script type="text/javascript">
-    var geoTypeCheckbox = L.control({
-        position: 'bottomleft'
-    });
-    geoTypeCheckbox.onAdd = function (map) {
-        var geoTypeCheckDiv = L.DomUtil.create('div', 'geoTypeDiv');
-
-        var typeList = {
-            'B': '商业区',
-            'R': '居住区',
-            'G': '休闲区',
-            'M': '工作区'
+    function geoTypePanelAdd(type) {
+        if (type === 'marker') {type = 'point'}
+        geoTypePanelRemove();
+        var geoTypeCheckbox = L.control({
+            position: 'bottomleft'
+        });
+        geoTypeCheckbox.onAdd = function (map) {
+            var geoTypeCheckDiv = L.DomUtil.create('div', 'geoTypeDiv');
+            typeList = {{ typedict|safe }};
+            var keyList = Object.keys(typeList[type]);
+            for (var i = 0; i < keyList.length; i++) {
+                var geoDiv = document.createElement('div');
+                geoDiv.setAttribute('class', 'geodiv');
+                var geoInput = document.createElement('input');
+                geoInput.setAttribute('type', 'radio');
+                geoInput.setAttribute('class', 'geoType');
+                geoInput.setAttribute('name', 'geoType');
+                geoInput.setAttribute('id', 'geoType-' + keyList[i]);
+                geoDiv.appendChild(geoInput);
+                geoDiv.innerHTML += decodeURIComponent(escape(typeList[type][keyList[i]]));
+                geoTypeCheckDiv.appendChild(geoDiv);
+            }
+            return geoTypeCheckDiv;
         };
-        var keyList = Object.keys(typeList);
-        for (var i = 0; i < keyList.length; i++) {
-            var geoDiv = document.createElement('div');
-            geoDiv.setAttribute('class', 'geodiv');
-            var geoInput = document.createElement('input');
-            geoInput.setAttribute('type', 'radio');
-            geoInput.setAttribute('class', 'geoType');
-            geoInput.setAttribute('name', 'geoType');
-            geoInput.setAttribute('id', 'geoType-' + keyList[i]);
-            geoDiv.appendChild(geoInput);
-            geoDiv.innerHTML += typeList[keyList[i]];
-            geoTypeCheckDiv.appendChild(geoDiv);
+        geoTypeCheckbox.addTo(map);
+        document.getElementsByClassName('geoType')[0].checked = true;
+    }
+    function geoTypePanelRemove() {
+        var geoTypeCheckDiv = document.getElementsByClassName('geoTypeDiv');
+        if (geoTypeCheckDiv[0]) {
+            geoTypeCheckDiv[0].parentNode.removeChild(geoTypeCheckDiv[0]);
         }
-        return geoTypeCheckDiv;
-    };
-    geoTypeCheckbox.addTo(map);
-    document.getElementsByClassName('geoType')[0].checked = true;
+    }
 </script>
 {% endblock %}
