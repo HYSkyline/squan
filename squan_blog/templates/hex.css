@@ -1,0 +1,38 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  overflow-y: hidden;
+}
+
+#examples {
+  background: grey;
+  height: 100%;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  border-top: solid 1px #fff;
+  border-bottom: solid 1px #fff;
+}
+
+#examples svg,
+#examples canvas {
+  position: absolute;
+}
+
+.example-mesh {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.25);
+  stroke-width: 2px;
+}
+
+.example-anchor path {
+  fill: none;
+  pointer-events: all;
+}
+
+.example-anchor path:hover {
+  stroke: white;
+  stroke-width: 2px;
+}

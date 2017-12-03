@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="utf-8">
+	<title>learn d3</title>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/d3-hexbin.v0.2.min.js"></script>
+    <style type="text/css">
+	    html, body {
+	    	padding: 0;
+	    	margin: 0;
+	    	height: 100%;
+	    	width: 100%;
+	    	overflow-y: hidden;
+	    	background-color: black;
+	    }
+	    svg {
+	    	height: 100%;
+	    	width: 100%;
+	    	z-index: -1;
+	    }
+    	.hexagon {
+    		stroke: rgba(150, 150, 150, 0);
+    		stroke-width: 2px;
+		}
+    	.hexagon-mesh {
+    		stroke: rgba(255, 255, 255, 1);
+    		stroke-width: 4px;
+    	}
+    </style>
+</head>
+<body>
+<svg></svg>
+<script>
+	var data = [
+        {title: "Reingold–Tilford Tree (Radial)", url: "http://bl.ocks.org/mbostock/4063550"},
+        {title: "Factorisation Diagrams", url: "http://www.jasondavies.com/factorisation-diagrams/"},
+        {title: "Phylogenetic Tree of Life", url: "http://www.jasondavies.com/tree-of-life/"},
+        {title: "Geographic Clipping", url: "http://www.jasondavies.com/maps/clip/"},
+        {title: "Les Misérables Co-occurrence Matrix", url: "http://bost.ocks.org/mike/miserables/"},
+        {title: "L*a*b* and HCL color spaces", url: "http://bl.ocks.org/mbostock/3014589"},
+        {title: "Treemap", url: "http://bl.ocks.org/mbostock/4063582"}
+    ];
+
+	var svg = d3.select("svg"),
+	    margin = {top: 0, right: 0, bottom: 0, left: 0},
+	    width = document.body.clientWidth,
+	    height = document.body.clientHeight,
+	    g = svg.append("g"),
+	    radius = 40;
+
+	var points = d3.range(1000).map(function(i) {
+	    	return [(i * radius) % (width + radius), parseInt(i * radius / width) * radius];
+	    });
+
+	var hexbin = d3.hexbin()
+	    .radius(radius);
+
+	var x = d3.scaleLinear()
+	    .domain([0, width])
+	    .range([0, width]);
+
+	var y = d3.scaleLinear()
+	    .domain([0, height])
+	    .range([height, 0]);
+
+	g.append("g")
+	    .attr("class", "hexagon")
+		.selectAll("path")
+		.data(hexbin(points))
+		.enter()
+		.append("path")
+	    .attr("d", hexbin.hexagon())
+	    .attr("transform", function(d) {
+	    	return "translate(" + d.x + "," + d.y + ")";
+	    })
+	    .style("fill", 'black')
+	    .style("opacity", 0.5)
+	    .on('mouseover', function () {
+	    	d3.select(this)
+	    		.attr('class', 'hexagon-mesh');
+	    })
+	    .on('mouseout', function () {
+	    	d3.select(this)
+	    		.attr('class', 'hexagon');
+	    });
+</script>
+</body>
+</html>
