@@ -121,35 +121,31 @@
     // data设定一行十个六边形
     data.forEach(function(d, i) {
         d.i = i % 10;
-        d.j = i / 10 | 0;
+        d.j = i / 10;
     });
 
     // height代表高度
     // radius代表六边形大小
     // depth代表移动速度, depth越高速度越慢
     var height = document.body.clientHeight,
-        innerWidth = document.body.clientWidth;
+        width = document.body.clientWidth;
         radius = 35,
         depth = 6;
 
-    var currentFocus = [innerWidth / 2, height / 2],
+    var currentFocus = [width / 2, height / 2],
         desiredFocus,
         idle = true;
 
     // 读取body元素的style, 准备构建transform函数
     var style = document.body.style,
-        transform = ("webkitTransform" in style ? "-webkit-"
-            : "MozTransform" in style ? "-moz-"
-            : "msTransform" in style ? "-ms-"
-            : "OTransform" in style ? "-o-"
-            : "") + "transform";
+        transform = "transform";
 
     // hexbin生成器
     var hexbin = d3.hexbin()
         .radius(radius);
 
     // 绑定鼠标移动效果
-    if (!("ontouchstart" in document)) d3.select("#examples")
+    d3.select("#examples")
         .on("mousemove", mousemoved);
 
     var deep = d3.select("#examples-deep");
@@ -181,15 +177,15 @@
     }
 
     function resized() {
-        var deepWidth = innerWidth * (depth + 1) / depth,
+        var deepWidth = width * (depth + 1) / depth,
             deepHeight = height * (depth + 1) / depth,
             centers = hexbin.size([deepWidth, deepHeight]).centers();
 
-        desiredFocus = [innerWidth / 2, height / 2];
+        desiredFocus = [width / 2, height / 2];
         moved();
 
         graphic
-            .style("left", Math.round((innerWidth - deepWidth) / 2) + "px")
+            .style("left", Math.round((width - deepWidth) / 2) + "px")
             .style("top", Math.round((height - deepHeight) / 2) + "px")
             .attr("width", deepWidth)
             .attr("height", deepHeight);
@@ -228,7 +224,7 @@
     function mousemoved() {
         var m = d3.mouse(this);
         desiredFocus = [
-            Math.round((m[0] - innerWidth / 2) / depth) * depth + innerWidth / 2,
+            Math.round((m[0] - width / 2) / depth) * depth + width / 2,
             Math.round((m[1] - height / 2) / depth) * depth + height / 2
         ];
         moved();
@@ -238,7 +234,7 @@
         if (idle) d3.timer(function() {
             if (idle = Math.abs(desiredFocus[0] - currentFocus[0]) < .5 && Math.abs(desiredFocus[1] - currentFocus[1]) < .5) currentFocus = desiredFocus;
             else currentFocus[0] += (desiredFocus[0] - currentFocus[0]) * .14, currentFocus[1] += (desiredFocus[1] - currentFocus[1]) * .14;
-            deep.style(transform, "translate(" + (innerWidth / 2 - currentFocus[0]) / depth + "px," + (height / 2 - currentFocus[1]) / depth + "px)");
+            deep.style(transform, "translate(" + (width / 2 - currentFocus[0]) / depth + "px," + (height / 2 - currentFocus[1]) / depth + "px)");
             return idle;
         });
     }

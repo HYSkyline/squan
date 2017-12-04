@@ -14,33 +14,33 @@
 	    	overflow-y: hidden;
 	    	background-color: grey;
 	    }
-	    #coord {
-	    	position: fixed;
-	    	height: 50px;
-	    	width: 150px;
-	    	background-color: wheat;
-	    }
 	    svg {
 	    	height: 100%;
 	    	width: 100%;
 	    	z-index: -1;
 	    }
     	.hexagon {
-    		fill: grey;
-    		stroke: rgba(150, 150, 150, 0);
+    		fill: black;
+    		stroke: rgba(255, 255, 255, 0.2);
     		stroke-width: 2px;
 		}
     	.hexagon-mesh {
     		stroke: rgba(255, 255, 255, 1);
     		stroke-width: 4px;
+    		z-index: 99;
     	}
     </style>
 </head>
-<body onmousemove="getCoord(event)">
-	<div id="coord"></div>
+<body>
 	<svg></svg>
 <script>
 	var data = [
+        {title: "Reingold–Tilford Tree (Radial)", url: "http://bl.ocks.org/mbostock/4063550"},
+        {title: "Factorisation Diagrams", url: "http://www.jasondavies.com/factorisation-diagrams/"},
+        {title: "Phylogenetic Tree of Life", url: "http://www.jasondavies.com/tree-of-life/"},
+        {title: "Geographic Clipping", url: "http://www.jasondavies.com/maps/clip/"},
+        {title: "Les Misérables Co-occurrence Matrix", url: "http://bost.ocks.org/mike/miserables/"},
+        {title: "L*a*b* and HCL color spaces", url: "http://bl.ocks.org/mbostock/3014589"},
         {title: "Reingold–Tilford Tree (Radial)", url: "http://bl.ocks.org/mbostock/4063550"},
         {title: "Factorisation Diagrams", url: "http://www.jasondavies.com/factorisation-diagrams/"},
         {title: "Phylogenetic Tree of Life", url: "http://www.jasondavies.com/tree-of-life/"},
@@ -58,12 +58,12 @@
 
 	var ri = 0;
 
-	var points = d3.range(30).map(function(i) {
+	var points = d3.range(data.length).map(function(i) {
     	if (i === 0) {
 			return [width / 2, height / 2];
 		} else {
 			ri += 1;
-			ri += parseInt(Math.random() * (1.5 - 1 / (i - 0.5)));
+			ri += parseInt(3 * i / data.length < 2 ? 2.4 * i / data.length * Math.random(): 2 * Math.random());
 			var cn = parseInt((1 + Math.sqrt(1 - 4 / 3 * (1 - ri))) / 2);
 			var pn = parseInt((ri - 3 * cn * (cn - 1) - 1) / cn);
 			var rn = ri - (3 * cn * (cn - 1) + 1) - pn * cn;
@@ -92,14 +92,15 @@
 			return 'translate(' + d.x + ',' + d.y + ')';
 		})
 		.attr('d', hexbin.hexagon())
-		.attr('stroke', 'rgba(255, 255, 255, 1)');
-</script>
-<script type="text/javascript">
-	function getCoord(event) {
-        var e = event || window.event;
-        var coord = document.getElementById('coord');
-        coord.innerHTML = e.clientX.toString() + ', ' + e.clientY.toString();
-    }
+		.attr('stroke', 'rgba(255, 255, 255, 1)')
+		.on('mouseover', function (d, i) {
+			d3.select(this)
+				.attr('class', 'hexagon-mesh');
+		})
+		.on('mouseout', function (d, i) {
+			d3.select(this)
+				.attr('class', 'hexagon');
+		})
 </script>
 </body>
 </html>
