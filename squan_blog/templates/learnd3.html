@@ -12,7 +12,13 @@
 	    	height: 100%;
 	    	width: 100%;
 	    	overflow-y: hidden;
-	    	background-color: black;
+	    	background-color: grey;
+	    }
+	    #coord {
+	    	position: fixed;
+	    	height: 50px;
+	    	width: 150px;
+	    	background-color: wheat;
 	    }
 	    svg {
 	    	height: 100%;
@@ -20,6 +26,7 @@
 	    	z-index: -1;
 	    }
     	.hexagon {
+    		fill: grey;
     		stroke: rgba(150, 150, 150, 0);
     		stroke-width: 2px;
 		}
@@ -29,8 +36,9 @@
     	}
     </style>
 </head>
-<body>
-<svg></svg>
+<body onmousemove="getCoord(event)">
+	<div id="coord"></div>
+	<svg></svg>
 <script>
 	var data = [
         {title: "Reingold–Tilford Tree (Radial)", url: "http://bl.ocks.org/mbostock/4063550"},
@@ -46,12 +54,24 @@
 	    margin = {top: 0, right: 0, bottom: 0, left: 0},
 	    width = document.body.clientWidth,
 	    height = document.body.clientHeight,
-	    g = svg.append("g"),
 	    radius = 40;
 
-	var points = d3.range(1000).map(function(i) {
-	    	return [(i * radius) % (width + radius), parseInt(i * radius / width) * radius];
-	    });
+	var ri = 0;
+
+	var points = d3.range(30).map(function(i) {
+    	if (i === 0) {
+			return [width / 2, height / 2];
+		} else {
+			ri += 1;
+			ri += parseInt(Math.random() * (1.5 - 1 / (i - 0.5)));
+			var cn = parseInt((1 + Math.sqrt(1 - 4 / 3 * (1 - ri))) / 2);
+			var pn = parseInt((ri - 3 * cn * (cn - 1) - 1) / cn);
+			var rn = ri - (3 * cn * (cn - 1) + 1) - pn * cn;
+			var x = width / 2 + Math.cos(pn * Math.PI / 3) * radius * cn * 1.732 + Math.cos((pn * Math.PI / 3) + 2 * Math.PI / 3) * radius * 1.732 * rn;
+			var y = height / 2 + Math.sin(pn * Math.PI / 3) * radius * cn * 1.732 + Math.sin((pn * Math.PI / 3) + 2 * Math.PI / 3) * radius * 1.732 * rn;
+			return [x, y];
+		}
+    });
 
 	var hexbin = d3.hexbin()
 	    .radius(radius);
@@ -64,26 +84,22 @@
 	    .domain([0, height])
 	    .range([height, 0]);
 
-	g.append("g")
-	    .attr("class", "hexagon")
-		.selectAll("path")
+	svg.selectAll('path')
 		.data(hexbin(points))
 		.enter()
-		.append("path")
-	    .attr("d", hexbin.hexagon())
-	    .attr("transform", function(d) {
-	    	return "translate(" + d.x + "," + d.y + ")";
-	    })
-	    .style("fill", 'black')
-	    .style("opacity", 0.5)
-	    .on('mouseover', function () {
-	    	d3.select(this)
-	    		.attr('class', 'hexagon-mesh');
-	    })
-	    .on('mouseout', function () {
-	    	d3.select(this)
-	    		.attr('class', 'hexagon');
-	    });
+		.append('path')
+		.attr('transform', function (d) {
+			return 'translate(' + d.x + ',' + d.y + ')';
+		})
+		.attr('d', hexbin.hexagon())
+		.attr('stroke', 'rgba(255, 255, 255, 1)');
+</script>
+<script type="text/javascript">
+	function getCoord(event) {
+        var e = event || window.event;
+        var coord = document.getElementById('coord');
+        coord.innerHTML = e.clientX.toString() + ', ' + e.clientY.toString();
+    }
 </script>
 </body>
 </html>
