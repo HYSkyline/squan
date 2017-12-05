@@ -118,125 +118,63 @@
         {title: "Parallel Sets", url: "http://www.jasondavies.com/parallel-sets/"}
     ];
 
-    // data设定一行十个六边形
-    data.forEach(function(d, i) {
-        d.i = i % 10;
-        d.j = i / 10;
-    });
-
     // height代表高度
     // radius代表六边形大小
     // depth代表移动速度, depth越高速度越慢
     var height = document.body.clientHeight,
         width = document.body.clientWidth;
-        radius = 35,
+        radius = 120,
         depth = 6;
 
     var currentFocus = [width / 2, height / 2],
-        desiredFocus,
-        idle = true;
-
-    // 读取body元素的style, 准备构建transform函数
-    var style = document.body.style,
-        transform = "transform";
+        desiredFocus;
 
     // hexbin生成器
     var hexbin = d3.hexbin()
         .radius(radius);
 
-    // 绑定鼠标移动效果
-    d3.select("#examples")
-        .on("mousemove", mousemoved);
-
     var deep = d3.select("#examples-deep");
-
-    var canvas = deep.append("canvas")
-        .attr("height", height);
-
-    var context = canvas.node().getContext("2d");
 
     var svg = deep.append("svg")
         .attr("height", height);
-
-    // 通过更改class增加描边效果
-    var mesh = svg.append("path")
-        .attr("class", "example-mesh");
 
     var anchor = svg.append("g")
         .attr("class", "example-anchor")
         .selectAll("a");
 
-    var graphic = deep.selectAll("svg,canvas");
+    var graphic = deep.selectAll("svg");
+    var deepWidth = width * (depth + 1) / depth,
+        deepHeight = height * (depth + 1) / depth,
+        centers = hexbin.size([deepWidth, deepHeight]).centers();
+    graphic
+        .style("left", Math.round((width - deepWidth) / 2) + "px")
+        .style("top", Math.round((height - deepHeight) / 2) + "px")
+        .attr("width", deepWidth)
+        .attr("height", deepHeight);
 
-    d3.select(window)
-        .on("resize", resized)
-        .each(resized);
+    centers.forEach(function(center, i) {
+        center.example = data[i];
+    });
 
-    function drawImage(d) {
-        context.moveTo(0, -radius);
-    }
+    anchor = anchor.data(centers);
 
-    function resized() {
-        var deepWidth = width * (depth + 1) / depth,
-            deepHeight = height * (depth + 1) / depth,
-            centers = hexbin.size([deepWidth, deepHeight]).centers();
+    anchor.exit().remove();
 
-        desiredFocus = [width / 2, height / 2];
-        moved();
-
-        graphic
-            .style("left", Math.round((width - deepWidth) / 2) + "px")
-            .style("top", Math.round((height - deepHeight) / 2) + "px")
-            .attr("width", deepWidth)
-            .attr("height", deepHeight);
-
-        centers.forEach(function(center, i) {
-            center.j = Math.round(center[1] / (radius * 1.5));
-            center.i = Math.round((center[0] - (center.j & 1) * radius * Math.sin(Math.PI / 3)) / (radius * 2 * Math.sin(Math.PI / 3)));
-            context.translate(Math.round(center[0]), Math.round(center[1]));
-            drawImage(center.example = data[(center.i % 10) + ((center.j + (center.i / 10 & 1) * 5) % 10) * 10]);
+    var anchorEnter = anchor.enter().append("a")
+        .attr("href", function(d) {
+            return d.example.url;
+        })
+        .attr("title", function(d) {
+            return d.example.title;
         });
 
-        mesh.attr("d", hexbin.mesh);
+    anchorEnter.append("path")
+        .attr("d", hexbin.hexagon())
+        .attr('stroke', 'grey');
 
-        anchor = anchor.data(centers, function(d) {
-            return d.i + "," + d.j;
+    anchor = anchorEnter.merge(anchor)
+        .attr("transform", function(d) {
+            return "translate(" + d + ")";
         });
-
-        anchor.exit().remove();
-
-        var anchorEnter = anchor.enter().append("a")
-            .attr("xlink:href", function(d) {
-                return d.example.url;
-            })
-            .attr("xlink:title", function(d) {
-                return d.example.title;
-            })
-            .attr("xlink:background", 'red');
-
-        anchorEnter.append("path")
-            .attr("d", hexbin.hexagon());
-
-        anchor = anchorEnter.merge(anchor)
-            .attr("transform", function(d) { return "translate(" + d + ")"; });
-    }
-
-    function mousemoved() {
-        var m = d3.mouse(this);
-        desiredFocus = [
-            Math.round((m[0] - width / 2) / depth) * depth + width / 2,
-            Math.round((m[1] - height / 2) / depth) * depth + height / 2
-        ];
-        moved();
-    }
-
-    function moved() {
-        if (idle) d3.timer(function() {
-            if (idle = Math.abs(desiredFocus[0] - currentFocus[0]) < .5 && Math.abs(desiredFocus[1] - currentFocus[1]) < .5) currentFocus = desiredFocus;
-            else currentFocus[0] += (desiredFocus[0] - currentFocus[0]) * .14, currentFocus[1] += (desiredFocus[1] - currentFocus[1]) * .14;
-            deep.style(transform, "translate(" + (width / 2 - currentFocus[0]) / depth + "px," + (height / 2 - currentFocus[1]) / depth + "px)");
-            return idle;
-        });
-    }
 </script>
 </body>

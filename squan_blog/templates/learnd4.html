@@ -12,26 +12,41 @@
 	    	height: 100%;
 	    	width: 100%;
 	    	overflow-y: hidden;
-	    	background-color: grey;
+	    	background-image: url('../static/img/userinfoBackground12.jpg');
+	    }
+	    #container {
+			height: 100%;
+			overflow: hidden;
+			padding: 0;
+			position: relative;
+	    }
+	    #avatar {
+	    	position: fixed;
+	    	width: 100px;
 	    }
 	    svg, g {
 	    	height: 100%;
 	    	width: 100%;
-	    	z-index: -1;
+	    	position: absolute;
 	    }
-    	.hexagon {
+    	.hexagon path {
     		fill: none;
     		stroke: rgba(255, 255, 255, 0.2);
     		stroke-width: 2px;
 		}
-    	.hexagon:hover {
+    	.hexagon path:hover {
     		stroke: rgba(255, 255, 255, 1);
     		stroke-width: 4px;
     	}
     </style>
 </head>
 <body>
-	<svg></svg>
+	<pattern id="avatar" x="-100" y="-100" height="200" width="200">
+	    <image x="50" y="50" width="100" height="100" xlink:href="../static/img/avatar/shirley.jpg"></image>
+	</pattern>
+	<div id="container">
+		<svg></svg>
+	</div>
 <script>
 	var dataset = [
         {title: "Reingold–Tilford Tree (Radial)", url: "http://bl.ocks.org/mbostock/4063550"},
@@ -53,7 +68,7 @@
 	    margin = {top: 0, right: 0, bottom: 0, left: 0},
 	    width = document.body.clientWidth,
 	    height = document.body.clientHeight,
-	    radius = 40;
+	    radius = 60;
 
 	var ri = 0;
 
@@ -75,53 +90,28 @@
 	var hexbin = d3.hexbin()
 	    .radius(radius);
 
-	// svg.selectAll('path')
-	// 	.data(hexbin(points))
-	// 	.enter()
-	// 	.append('path')
-	// 	.attr('transform', function (d) {
-	// 		return 'translate(' + d.x + ',' + d.y + ')';
-	// 	})
-	// 	.attr('d', hexbin.hexagon())
-	// 	.attr('stroke', 'rgba(255, 255, 255, 1)')
-	// 	.attr('class', 'hexagon');
-
 	var anchor = svg.append('g')
-		.attr('class', 'hexagon-anchor')
+		.attr('class', 'hexagon')
 		.selectAll('a');
 
 	anchor = anchor.data(dataset);
 
 	var anchorExist = anchor.enter().append('a')
-		.attr('title', function (d, i) {
-			return d.title;
+		.attr('href', function (d, i) {
+			return d.url;
 		});
 
 	var hexMesh = hexbin(points);
 
 	anchorExist.append('path')
 		.data(hexMesh)
-		.attr('d', hexbin.hexagon());
+		.attr('transform', function (d) {
+			return 'translate(' + d.x + ',' + d.y + ')';
+		})
+		.attr('d', hexbin.hexagon())
+		.attr('stroke', 'white')
+		.style('fill', "url(#avatar)");
 
-	// anchor = anchorExist.merge(anchor)
- //            .attr("transform", function(d) {
- //            	return "translate(" + d + ")";
- //            });
-
-    function getPoints(i) {
-    	if (i === 0) {
-			return [width / 2, height / 2];
-		} else {
-			ri += 1;
-			ri += parseInt(3 * i / dataset.length < 2 ? 2.4 * i / dataset.length * Math.random(): 2 * Math.random());
-			var cn = parseInt((1 + Math.sqrt(1 - 4 / 3 * (1 - ri))) / 2);
-			var pn = parseInt((ri - 3 * cn * (cn - 1) - 1) / cn);
-			var rn = ri - (3 * cn * (cn - 1) + 1) - pn * cn;
-			var x = width / 2 + Math.cos(pn * Math.PI / 3) * radius * cn * 1.732 + Math.cos((pn * Math.PI / 3) + 2 * Math.PI / 3) * radius * 1.732 * rn;
-			var y = height / 2 + Math.sin(pn * Math.PI / 3) * radius * cn * 1.732 + Math.sin((pn * Math.PI / 3) + 2 * Math.PI / 3) * radius * 1.732 * rn;
-			return [x, y];
-		}
-    }
 </script>
 </body>
 </html>

@@ -4,16 +4,14 @@ html, body {
   padding: 0;
   margin: 0;
   overflow-y: hidden;
+  background-image: url('../static/img/userinfoBackground12.jpg');
 }
 
 #examples {
-  background: grey;
   height: 100%;
   overflow: hidden;
   padding: 0;
   position: relative;
-  border-top: solid 1px #fff;
-  border-bottom: solid 1px #fff;
 }
 
 #examples svg,
@@ -23,8 +21,8 @@ html, body {
 
 .example-mesh {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.25);
-  stroke-width: 2px;
+  stroke: rgba(255, 255, 255, 1);
+  stroke-width: 0.5px;
 }
 
 .example-anchor path {
