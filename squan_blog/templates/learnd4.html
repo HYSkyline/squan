@@ -2,7 +2,7 @@
 <html lang="zh-cn">
 <head>
 	<meta charset="utf-8">
-	<title>learn d3</title>
+	<title>learn d4</title>
 	<script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://d3js.org/d3-hexbin.v0.2.min.js"></script>
     <style type="text/css">
@@ -14,7 +14,7 @@
 	    	overflow-y: hidden;
 	    	background-color: grey;
 	    }
-	    svg {
+	    svg, g {
 	    	height: 100%;
 	    	width: 100%;
 	    	z-index: -1;
@@ -33,7 +33,7 @@
 <body>
 	<svg></svg>
 <script>
-	var data = [
+	var dataset = [
         {title: "Reingold–Tilford Tree (Radial)", url: "http://bl.ocks.org/mbostock/4063550"},
         {title: "Factorisation Diagrams", url: "http://www.jasondavies.com/factorisation-diagrams/"},
         {title: "Phylogenetic Tree of Life", url: "http://www.jasondavies.com/tree-of-life/"},
@@ -57,12 +57,12 @@
 
 	var ri = 0;
 
-	var points = d3.range(data.length).map(function(i) {
+	var points = d3.range(dataset.length).map(function(i) {
     	if (i === 0) {
 			return [width / 2, height / 2];
 		} else {
 			ri += 1;
-			ri += parseInt(3 * i / data.length < 2 ? 2.4 * i / data.length * Math.random(): 2 * Math.random());
+			ri += parseInt(3 * i / dataset.length < 2 ? 2.4 * i / dataset.length * Math.random(): 2 * Math.random());
 			var cn = parseInt((1 + Math.sqrt(1 - 4 / 3 * (1 - ri))) / 2);
 			var pn = parseInt((ri - 3 * cn * (cn - 1) - 1) / cn);
 			var rn = ri - (3 * cn * (cn - 1) + 1) - pn * cn;
@@ -75,16 +75,53 @@
 	var hexbin = d3.hexbin()
 	    .radius(radius);
 
-	svg.selectAll('path')
-		.data(hexbin(points))
-		.enter()
-		.append('path')
-		.attr('transform', function (d) {
-			return 'translate(' + d.x + ',' + d.y + ')';
-		})
-		.attr('d', hexbin.hexagon())
-		.attr('stroke', 'rgba(255, 255, 255, 1)')
-		.attr('class', 'hexagon');
+	// svg.selectAll('path')
+	// 	.data(hexbin(points))
+	// 	.enter()
+	// 	.append('path')
+	// 	.attr('transform', function (d) {
+	// 		return 'translate(' + d.x + ',' + d.y + ')';
+	// 	})
+	// 	.attr('d', hexbin.hexagon())
+	// 	.attr('stroke', 'rgba(255, 255, 255, 1)')
+	// 	.attr('class', 'hexagon');
+
+	var anchor = svg.append('g')
+		.attr('class', 'hexagon-anchor')
+		.selectAll('a');
+
+	anchor = anchor.data(dataset);
+
+	var anchorExist = anchor.enter().append('a')
+		.attr('title', function (d, i) {
+			return d.title;
+		});
+
+	var hexMesh = hexbin(points);
+
+	anchorExist.append('path')
+		.data(hexMesh)
+		.attr('d', hexbin.hexagon());
+
+	// anchor = anchorExist.merge(anchor)
+ //            .attr("transform", function(d) {
+ //            	return "translate(" + d + ")";
+ //            });
+
+    function getPoints(i) {
+    	if (i === 0) {
+			return [width / 2, height / 2];
+		} else {
+			ri += 1;
+			ri += parseInt(3 * i / dataset.length < 2 ? 2.4 * i / dataset.length * Math.random(): 2 * Math.random());
+			var cn = parseInt((1 + Math.sqrt(1 - 4 / 3 * (1 - ri))) / 2);
+			var pn = parseInt((ri - 3 * cn * (cn - 1) - 1) / cn);
+			var rn = ri - (3 * cn * (cn - 1) + 1) - pn * cn;
+			var x = width / 2 + Math.cos(pn * Math.PI / 3) * radius * cn * 1.732 + Math.cos((pn * Math.PI / 3) + 2 * Math.PI / 3) * radius * 1.732 * rn;
+			var y = height / 2 + Math.sin(pn * Math.PI / 3) * radius * cn * 1.732 + Math.sin((pn * Math.PI / 3) + 2 * Math.PI / 3) * radius * 1.732 * rn;
+			return [x, y];
+		}
+    }
 </script>
 </body>
 </html>
