@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="utf-8">
+	<title>userlist</title>
+	<style type="text/css">
+		html {
+			background-color: grey;
+		}
+		canvas {
+			background-color: transparent;
+		}
+	</style>
+</head>
+<body>
+<canvas id="userCanvas" width="1000" height="800"></canvas>
+<script type="text/javascript">
+	var userlist = [
+        {username: "HYSkyline", avatar: "shirley.jpg"},
+        {username: "AX", avatar: "init_avatar.jpg"},
+        {username: "Shirley", avatar: "shirley.jpg"}
+    ];
+</script>
+<script type="text/javascript">
+	var ctx;
+	function drawImg(i) {
+		var canvas = document.getElementById('userCanvas');
+		if (!canvas.getContext) return;
+		var ctx = canvas.getContext("2d");
+
+		var img = new Image();
+		img.onload = function () {
+			ctx.drawImage(img, 150 * i, 0, 150, 150);
+		}
+		img.src = '../../static/img/avatar/' + userlist[i].avatar;
+
+		ctx.beginPath();
+		ctx.moveTo(75 + 150 * i, 0);
+		ctx.lineTo(150 + 150 * i, 75);
+		ctx.lineTo(75 + 150 * i, 150);
+		ctx.lineTo(150 * i, 75);
+		ctx.closePath();
+		ctx.clip();
+	}
+	// for (var i = 2; i < 3; i++) {
+	// 	drawImg(i);
+	// }
+</script>
+<script type="text/javascript">
+	var ctx;
+	function drawImg2() {
+		var canvas = document.getElementById('userCanvas');
+		if (!canvas.getContext) return;
+		var ctx = canvas.getContext("2d");
+
+		var img = new Image();
+		img.onload = function () {
+			ctx.drawImage(img, 0, 0, 150, 150);
+		}
+		img.src = '../../static/img/avatar/' + userlist[0].avatar;
+
+
+		ctx.beginPath();
+		ctx.moveTo(75, 0);
+		ctx.lineTo(300, 75);
+		ctx.lineTo(75, 150);
+		ctx.lineTo(0, 75);
+		ctx.closePath();
+		ctx.clip();
+
+		var img2 = new Image();
+		img2.onload = function () {
+			ctx.drawImage(img2, 160, 0, 150, 150);
+		}
+		img2.src = '../../static/img/avatar/' + userlist[1].avatar;
+	}
+	drawImg2();
+</script>
+</body>
+</html>
