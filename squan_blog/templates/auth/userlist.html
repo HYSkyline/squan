@@ -22,59 +22,59 @@
     ];
 </script>
 <script type="text/javascript">
-	var ctx;
-	function drawImg(i) {
-		var canvas = document.getElementById('userCanvas');
-		if (!canvas.getContext) return;
-		var ctx = canvas.getContext("2d");
-
-		var img = new Image();
-		img.onload = function () {
-			ctx.drawImage(img, 150 * i, 0, 150, 150);
-		}
-		img.src = '../../static/img/avatar/' + userlist[i].avatar;
-
-		ctx.beginPath();
-		ctx.moveTo(75 + 150 * i, 0);
-		ctx.lineTo(150 + 150 * i, 75);
-		ctx.lineTo(75 + 150 * i, 150);
-		ctx.lineTo(150 * i, 75);
-		ctx.closePath();
-		ctx.clip();
+	var imageList = [];
+	for (var i = userlist.length - 1; i >= 0; i--) {
+		imageList.push(addImage(userlist[i]));
 	}
-	// for (var i = 2; i < 3; i++) {
-	// 	drawImg(i);
-	// }
-</script>
-<script type="text/javascript">
-	var ctx;
-	function drawImg2() {
-		var canvas = document.getElementById('userCanvas');
-		if (!canvas.getContext) return;
-		var ctx = canvas.getContext("2d");
 
-		var img = new Image();
-		img.onload = function () {
-			ctx.drawImage(img, 0, 0, 150, 150);
-		}
-		img.src = '../../static/img/avatar/' + userlist[0].avatar;
+	function addImage(user) {
+		var userImage = document.createElement('img');
+		userImage.setAttribute('id', user.username);
+		userImage.setAttribute('src', '../../static/img/avatar/' + userlist[i].avatar + '');
+		return userImage;
+	}
 
-
+	function polygon(ctx, x, y, radius, sides, startAngle, anticlockwise, img, imgX, imgY) {
+		if (sides < 3) return;
+		var a = (Math.PI * 2) / sides;
+		a = anticlockwise? -a: a;
+		ctx.save();
+		
+		ctx.translate(x, y);
+		ctx.rotate(startAngle);  
 		ctx.beginPath();
-		ctx.moveTo(75, 0);
-		ctx.lineTo(300, 75);
-		ctx.lineTo(75, 150);
-		ctx.lineTo(0, 75);
+		ctx.moveTo(0, radius);
+		for (var i = 1; i < sides; i++) {
+			ctx.lineTo(radius * Math.sin(a * i), radius * Math.cos(a * i));
+		}
 		ctx.closePath();
+
+		ctx.lineWidth = 5;
+		ctx.strokeStyle = 'white';
+		ctx.stroke();
+
 		ctx.clip();
 
-		var img2 = new Image();
-		img2.onload = function () {
-			ctx.drawImage(img2, 160, 0, 150, 150);
-		}
-		img2.src = '../../static/img/avatar/' + userlist[1].avatar;
+		ctx.drawImage(img, imgX, imgY);
+		ctx.restore();
 	}
-	drawImg2();
+
+	// Grab the Canvas and Drawing Context
+	var canvas = document.getElementById('userCanvas');
+	var ctx = canvas.getContext('2d');
+
+	// When the image is loaded, draw it
+	var cnt = 0;
+	for (i = 0; i < userlist.length; i++) {
+		imageList[i].onload = function () {
+			cnt++;
+		}
+	}
+	if (cnt === userlist.length) {
+		for (i = 0; i < userlist.length; i++) {
+			polygon(ctx, 90 + 180 * i, 120, 100, 6, 0, 0, imageList[i], 0, 0);
+		}
+	}
 </script>
 </body>
 </html>
