@@ -55,6 +55,12 @@ def register():
     return render_template('auth/register.html', form=form)
 
 
+@auth.route('/userview', methods=['GET'])
+def userview():
+    users = User.query.all()
+    return render_template('auth/userlist.html', userlist=users)
+
+
 @auth.route('/userinfo/<username>', methods=['GET', 'POST'])
 @login_required
 def userinfo(username):
