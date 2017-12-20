@@ -173,11 +173,9 @@
     });
 
     map.on(L.Draw.Event.DRAWSTART, function(event) {
-        // console.log('开始绘制');
-        // console.log(event);
         var layerType = event.layerType;
         geoTypePanelAdd(layerType);
-
+        // 调整说明为中文
         $(".leaflet-draw-tooltip:first span:first").text('单击以绘制点');
         $("[title='Finish drawing']").text("完成");
         $("[title='Delete last point drawn']").text("删除上一节点");
@@ -194,6 +192,7 @@
         }
     });
 
+    // 调整说明为中文
     map.on(L.Draw.Event.EDITSTART, function(event) {
         $("[title='Save changes']").text("保存");
         $("[title='Cancel editing, discards all changes']").text("取消");
@@ -205,7 +204,6 @@
             $(".leaflet-draw-tooltip:first span:last").text("拖动节点以编辑图层要素");
         }, 20);
     });
-
     map.on(L.Draw.Event.DELETESTART, function(event) {
         $("[title='Save changes']").text("删除");
         $("[title='Cancel editing, discards all changes']").text("取消");
@@ -256,6 +254,15 @@
             }
             geom_coordinate = pl_points;
         }
+
+        var geoInputs = document.getElementsByClassName('geoType');
+        for (var i = 0; i < geoInputs.length; i++) {
+            if (geoInputs[i].checked === true) {
+                var geodataType = geoInputs[i].dataset.geotype;
+                break;
+            }
+        }
+
         $.ajax({
             type: "POST",
             url: "http://127.0.0.1:5000/geo/{{ projectname }}",
@@ -264,6 +271,7 @@
                 geo_type: geom_type,
                 geo_coordinate: JSON.stringify(geom_coordinate),
                 geo_event: geom_event,
+                geo_datatype: geodataType
             },
             success: function (data) {}
         })
@@ -271,30 +279,26 @@
 </script>
 <script type="text/javascript">
     function geoTypePanelAdd(type) {
-        if (type === 'marker') {type = 'point'}
+        if (type === 'marker') {type = 'point';}
         geoTypePanelRemove();
-        var geoTypeCheckbox = L.control({
-            position: 'bottomleft'
-        });
-        geoTypeCheckbox.onAdd = function (map) {
-            var geoTypeCheckDiv = L.DomUtil.create('div', 'geoTypeDiv');
-            typeList = {{ typedict|safe }};
-            var keyList = Object.keys(typeList[type]);
-            for (var i = 0; i < keyList.length; i++) {
-                var geoDiv = document.createElement('div');
-                geoDiv.setAttribute('class', 'geodiv');
-                var geoInput = document.createElement('input');
-                geoInput.setAttribute('type', 'radio');
-                geoInput.setAttribute('class', 'geoType');
-                geoInput.setAttribute('name', 'geoType');
-                geoInput.setAttribute('id', 'geoType-' + keyList[i]);
-                geoDiv.appendChild(geoInput);
-                geoDiv.innerHTML += decodeURIComponent(escape(typeList[type][keyList[i]]));
-                geoTypeCheckDiv.appendChild(geoDiv);
-            }
-            return geoTypeCheckDiv;
-        };
-        geoTypeCheckbox.addTo(map);
+        var geoTypeCheckDiv = document.createElement('div');
+        geoTypeCheckDiv.setAttribute('class', 'geoTypeDiv');
+        typeList = {{ typedict|safe }};
+        var keyList = Object.keys(typeList[type]);
+        for (var i = 0; i < keyList.length; i++) {
+            var geoDiv = document.createElement('div');
+            geoDiv.setAttribute('class', 'geodiv');
+            var geoInput = document.createElement('input');
+            geoInput.setAttribute('type', 'radio');
+            geoInput.setAttribute('class', 'geoType');
+            geoInput.setAttribute('name', 'geoType');
+            geoInput.setAttribute('data-geotype', keyList[i]);
+            geoInput.setAttribute('id', 'geoType-' + keyList[i]);
+            geoDiv.appendChild(geoInput);
+            geoDiv.innerHTML += decodeURIComponent(escape(typeList[type][keyList[i]]));
+            geoTypeCheckDiv.appendChild(geoDiv);
+        }
+        document.body.appendChild(geoTypeCheckDiv);
         document.getElementsByClassName('geoType')[0].checked = true;
     }
     function geoTypePanelRemove() {

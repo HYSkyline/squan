@@ -13,6 +13,14 @@ html, body {
 	width: 100%;
 	cursor: url('../../img/mouse/Normal.cur'), crosshair;
 }
+.geoTypeDiv {
+	position: fixed;
+	bottom: 16px;
+	left: 10px;
+	border-radius: 10px;
+	border: solid 2px grey;
+	z-index: 999;
+}
 .leaflet-map-pane * {
 	cursor: url('../../img/mouse/Normal.cur'), crosshair;
 }

@@ -165,6 +165,7 @@ def geo_edit(project_name):
 			geo_type = request.form.get('geo_type')
 			geo_coord = request.form.get('geo_coordinate')
 			geo_event = request.form.get('geo_event')
+			geo_datatype = request.form.get('geo_datatype')
 			if geo_event == 'DELETED':
 				if geo_type == 'POINT':
 					pt_res = geo_session.query(Geopoint).filter_by(ptid=geo_id).first()
@@ -188,6 +189,7 @@ def geo_edit(project_name):
 								projectname=geo_projectname,
 								quizee=geo_quizee,
 								quiztime=time.time(),
+								geotype=geo_datatype,
 								geopt=geo_type + '(' + str(pt_list[0]) + ' ' + str(pt_list[1]) + ')'
 							)
 						)
@@ -209,6 +211,7 @@ def geo_edit(project_name):
 								projectname=geo_projectname,
 								quizee=geo_quizee,
 								quiztime=time.time(),
+								geotype=geo_datatype,
 								geopl=geo_type + '(' + ','.join(polyline_point_list) + ')'
 							)
 						)
@@ -230,6 +233,7 @@ def geo_edit(project_name):
 								projectname=geo_projectname,
 								quizee=geo_quizee,
 								quiztime=time.time(),
+								geotype=geo_datatype,
 								geopg=geo_type + '((' + ','.join(polygon_point_list) + '))'
 							)
 						)
